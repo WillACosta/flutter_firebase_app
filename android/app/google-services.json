@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "600279484769",
+    "project_id": "fire-auth-app-edsrvn",
+    "storage_bucket": "fire-auth-app-edsrvn.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:600279484769:android:14b5033b03c074a1a49d20",
+        "android_client_info": {
+          "package_name": "com.example.firebase_auth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "600279484769-letq3fi3v7js5hokq2uft5j9i5ph782a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgr9M1gm01pbX_BAsQ9W2ntHm_JRV10oM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "600279484769-letq3fi3v7js5hokq2uft5j9i5ph782a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "600279484769-poskq186pdafg5cee9a4can0p0t4d4ad.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firebaseAuth"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
