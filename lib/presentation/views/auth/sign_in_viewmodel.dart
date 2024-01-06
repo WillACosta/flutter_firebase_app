@@ -7,7 +7,7 @@ class SigInViewModel {
   final SignInUseCase _signInUseCase;
   SigInViewModel(this._signInUseCase);
 
-  String? email = 'william@gmail.com';
+  String? email = 'william.costa@gmail.com';
   String? password = '123456';
 
   void setEmail(String? value) => email = value;

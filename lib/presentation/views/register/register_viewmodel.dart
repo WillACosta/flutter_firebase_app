@@ -7,7 +7,7 @@ class RegisterViewModel {
   RegisterViewModel(this._useCase);
   final RegisterUserUseCase _useCase;
 
-  String? email = 'william@gmail.com';
+  String? email = 'william.costa@gmail.com';
   String? password = '123456';
 
   void setEmail(String? value) => email = value;

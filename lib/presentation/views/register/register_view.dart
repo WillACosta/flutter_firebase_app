@@ -75,6 +75,7 @@ class _RegisterViewState extends State<RegisterView> {
                 decoration: const InputDecoration(
                   labelText: 'password',
                 ),
+                obscureText: true,
               ),
               const SizedBox(height: 45),
               ListenableBuilder(

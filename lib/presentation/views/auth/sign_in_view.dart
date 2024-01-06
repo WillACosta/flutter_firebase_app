@@ -83,6 +83,7 @@ class _SignInViewState extends State<SignInView> {
                   decoration: const InputDecoration(
                     labelText: 'password',
                   ),
+                  obscureText: true,
                 ),
                 const SizedBox(height: 45),
                 ListenableBuilder(
