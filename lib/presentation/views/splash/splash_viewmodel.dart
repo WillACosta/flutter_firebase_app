@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import '../../features/authentication/authentication.dart';
+import '../../../features/authentication/authentication.dart';
 
 class SplashViewModel {
   final AuthenticationRepository _authRepository;

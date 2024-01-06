@@ -1,4 +1,4 @@
-import '../../features/authentication/authentication.dart';
+import '../../../features/authentication/authentication.dart';
 
 class HomeViewModel {
   final AuthenticationRepository _authRepository;

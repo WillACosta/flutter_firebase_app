@@ -52,15 +52,19 @@ class _SignInViewState extends State<SignInView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        automaticallyImplyLeading: false,
+        title: const Text('Sign in'),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(15),
           child: Form(
             key: formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const SizedBox(height: 40),
                 TextFormField(
                   initialValue: vm.email,
                   onSaved: vm.setEmail,

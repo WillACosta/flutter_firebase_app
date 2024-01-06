@@ -19,7 +19,8 @@ class _HomeViewState extends State<HomeView> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Home'),
+        backgroundColor: Theme.of(context).colorScheme.background,
+        title: const Text('My Chats'),
         actions: [
           IconButton(
             onPressed: vm.logout,
@@ -33,13 +34,20 @@ class _HomeViewState extends State<HomeView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
-                'Welcome to the Home Screen.',
-                textAlign: TextAlign.center,
-              ),
               Text(
-                'You is logged in now $userName :)',
+                'Welcome $userName! :)',
                 textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Here, you can find all your chats.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
               ),
             ],
           ),

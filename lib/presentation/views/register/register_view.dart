@@ -45,14 +45,18 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        automaticallyImplyLeading: false,
+        title: const Text('Register'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(15),
         child: Form(
           key: formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const SizedBox(height: 40),
               TextFormField(
                 initialValue: vm.email,
                 onSaved: (value) => vm.setEmail(value),

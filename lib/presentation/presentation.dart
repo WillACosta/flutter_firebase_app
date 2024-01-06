@@ -1,4 +1,2 @@
-export 'auth/auth.dart';
-export 'home/home.dart';
-export 'register/register.dart';
-export 'splash/splash.dart';
+export 'theme/color_schemes.dart';
+export 'views/views.dart';

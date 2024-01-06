@@ -1,11 +1,11 @@
 import 'package:firebase_auth_app/features/authentication/authentication.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../core/core.dart';
+import '../../../core/core.dart';
 
-class RegisterViewModel {
-  RegisterViewModel(this._useCase);
-  final RegisterUserUseCase _useCase;
+class SigInViewModel {
+  final SignInUseCase _signInUseCase;
+  SigInViewModel(this._signInUseCase);
 
   String? email = 'william@gmail.com';
   String? password = '123456';
@@ -17,14 +17,14 @@ class RegisterViewModel {
   void _setState(UiState state) => uiState.value = state;
 
   submitForm() {
-    _registerUser();
+    _loginWithEmailAndPassword();
   }
 
-  Future<void> _registerUser() async {
+  Future<void> _loginWithEmailAndPassword() async {
     _setState(UiState.loading);
 
-    final result = await _useCase(
-      RegisterUserParams(
+    final result = await _signInUseCase(
+      SignInParams(
         email: email ?? 'INVALID DATA',
         password: password ?? 'INVALID DATA',
       ),
