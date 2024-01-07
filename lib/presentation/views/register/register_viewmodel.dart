@@ -1,9 +1,8 @@
 import 'package:firebase_auth_app/features/authentication/authentication.dart';
-import 'package:flutter/widgets.dart';
 
 import '../../../core/core.dart';
 
-class RegisterViewModel {
+class RegisterViewModel extends ViewModel {
   RegisterViewModel(this._useCase);
   final RegisterUserUseCase _useCase;
 
@@ -13,15 +12,12 @@ class RegisterViewModel {
   void setEmail(String? value) => email = value;
   void setPassword(String? value) => password = value;
 
-  final ValueNotifier uiState = ValueNotifier(UiState.idle);
-  void _setState(UiState state) => uiState.value = state;
-
   submitForm() {
     _registerUser();
   }
 
   Future<void> _registerUser() async {
-    _setState(UiState.loading);
+    setState(UiState.loading);
 
     final result = await _useCase(
       RegisterUserParams(
@@ -31,8 +27,8 @@ class RegisterViewModel {
     );
 
     result.fold(
-      (success) => _setState(UiState.success),
-      (failure) => _setState(UiState.error),
+      (success) => setState(UiState.success),
+      (failure) => setState(UiState.error),
     );
   }
 }
