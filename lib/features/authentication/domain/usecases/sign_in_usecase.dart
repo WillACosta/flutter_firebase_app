@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:result_dart/functions.dart';
 import 'package:result_dart/result_dart.dart';
 
-import '../../data/authentication_repository.dart';
+import '../../data/data.dart';
 
 class SignInUseCase {
   SignInUseCase(this._authRepository);

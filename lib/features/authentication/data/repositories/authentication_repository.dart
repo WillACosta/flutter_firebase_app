@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../core/adapters/firebase_adapters.dart';
+import '../../../../core/core.dart';
 
 class AuthenticationRepository implements FirebaseAuthAdapter {
   AuthenticationRepository(this._firebaseAuth);
@@ -10,6 +10,9 @@ class AuthenticationRepository implements FirebaseAuthAdapter {
   Stream<User?> authStatus() {
     return _firebaseAuth.authStateChanges();
   }
+
+  @override
+  User? get userSnapshot => _firebaseAuth.currentUser;
 
   @override
   Future<void> signOut() async {

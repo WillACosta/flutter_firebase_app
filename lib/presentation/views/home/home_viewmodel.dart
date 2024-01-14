@@ -10,7 +10,7 @@ class HomeViewModel extends ViewModel {
   final AuthenticationRepository _authRepository;
   final GetAllContactsUseCase _getContactsUseCase;
 
-  final ValueNotifier<List<UserModel>> contactsState = ValueNotifier([]);
+  final ValueNotifier<List<User>> contactsState = ValueNotifier([]);
 
   logout() {
     _authRepository.signOut();

@@ -14,11 +14,20 @@ class App extends StatelessWidget {
       theme: ThemeData(useMaterial3: true, colorScheme: lightColorScheme),
       darkTheme: ThemeData(useMaterial3: true, colorScheme: darkColorScheme),
       initialRoute: '/',
-      routes: {
-        '/': (context) => const SplashView(),
-        '/signin': (context) => const SignInView(),
-        '/home': (context) => const HomeView(),
-        '/register': (context) => const RegisterView(),
+      onGenerateRoute: (settings) {
+        return switch (settings.name) {
+          '/' => MaterialPageRoute(builder: (_) => const SplashView()),
+          '/signin' => MaterialPageRoute(builder: (_) => const SignInView()),
+          '/home' => MaterialPageRoute(builder: (_) => const HomeView()),
+          '/register' =>
+            MaterialPageRoute(builder: (_) => const RegisterView()),
+          '/chat-conversation' => MaterialPageRoute(
+              builder: (_) => const ChatConversionView(
+                userId: "",
+              ),
+            ),
+          _ => MaterialPageRoute(builder: (_) => Container()),
+        };
       },
     );
   }

@@ -1,11 +1,9 @@
-import 'package:firebase_auth_app/features/authentication/data/authentication_repository.dart';
-import 'package:firebase_auth_app/features/authentication/data/register_repository.dart';
 import 'package:result_dart/functions.dart';
 import 'package:result_dart/result_dart.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/core.dart';
-import '../models/user_model.dart';
+import '../../data/data.dart';
 
 class RegisterUserUseCase {
   final AuthenticationRepository _authRepository;
@@ -24,16 +22,11 @@ class RegisterUserUseCase {
       );
 
       final user = credentials.user;
-      final userModel = UserModel(
-        uid: user?.uid ?? const Uuid().v4(),
-        name: user?.displayName ?? 'User',
-        email: user?.email ?? 'no email address',
-      );
 
       await _registerRepository.saveUserToStorage(
-        uid: userModel.uid,
-        displayName: userModel.name,
-        email: userModel.email,
+        uid: user?.uid ?? const Uuid().v4(),
+        displayName: user?.displayName ?? 'Unknown',
+        email: user?.email ?? 'No email address',
       );
 
       await _authRepository.signInWithEmailAndPassword(

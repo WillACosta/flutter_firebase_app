@@ -14,6 +14,8 @@ abstract class FirebaseAuthAdapter {
   });
 
   Future<void> signOut();
+
+  User? get userSnapshot;
 }
 
 abstract class FirestoreDbAdapter {

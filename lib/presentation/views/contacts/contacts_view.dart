@@ -8,7 +8,7 @@ class ContactsView extends StatelessWidget {
     this.onSelectedContact,
   });
 
-  final List<UserModel> users;
+  final List<User> users;
   final void Function(String)? onSelectedContact;
 
   void _handleSelectedContact(String uid) {
@@ -38,7 +38,7 @@ class ContactsView extends StatelessWidget {
                 final user = users[index];
 
                 return ListTile(
-                  onTap: () => _handleSelectedContact(user.uid),
+                  onTap: () => _handleSelectedContact(user.id),
                   title: Text(user.name),
                   subtitle: Text(
                     user.email,

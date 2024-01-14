@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../../core/adapters/adapters.dart';
+import '../../../../core/core.dart';
 
 final class RegisterRepository implements FirestoreDbAdapter {
   RegisterRepository(this._firestore);

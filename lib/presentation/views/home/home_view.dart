@@ -15,6 +15,14 @@ class _HomeViewState extends State<HomeView> {
   final vm = serviceLocator.get<HomeViewModel>();
   final userName = 'Will';
 
+  void _navigateToChatScreen(String userId) {
+    Navigator.pushNamed(
+      context,
+      '/chat-conversation',
+      arguments: {userId: userId},
+    );
+  }
+
   void _showContactsBottomSheet() {
     showModalBottomSheet(
       context: context,
@@ -22,9 +30,7 @@ class _HomeViewState extends State<HomeView> {
         valueListenable: vm.contactsState,
         builder: (_, contacts, __) => ContactsView(
           users: contacts,
-          onSelectedContact: (uid) {
-            print('Contact selected is $uid');
-          },
+          onSelectedContact: (uid) => _navigateToChatScreen(uid),
         ),
       ),
     );
