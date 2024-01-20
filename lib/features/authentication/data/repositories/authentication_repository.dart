@@ -15,6 +15,9 @@ class AuthenticationRepository implements FirebaseAuthAdapter {
   User? get userSnapshot => _firebaseAuth.currentUser;
 
   @override
+  String get userId => userSnapshot?.uid ?? "INVALID";
+
+  @override
   Future<void> signOut() async {
     return await _firebaseAuth.signOut();
   }

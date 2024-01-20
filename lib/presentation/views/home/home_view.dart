@@ -1,6 +1,8 @@
 import 'package:firebase_auth_app/core/core.dart';
+import 'package:firebase_auth_app/features/chat/chat.dart';
 import 'package:flutter/material.dart';
 
+import '../chat/chat.dart';
 import '../contacts/contacts_view.dart';
 import 'home_viewmodel.dart';
 
@@ -19,7 +21,7 @@ class _HomeViewState extends State<HomeView> {
     Navigator.pushNamed(
       context,
       '/chat-conversation',
-      arguments: {userId: userId},
+      arguments: ChatConversationArgs(chattingWithId: userId),
     );
   }
 
@@ -42,6 +44,13 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
   }
 
+  /// TODO:
+  /// 1. refactor view code for simplicity
+  /// 2. Create a new Widget class for separate logic of:
+  ///   EmptyState
+  ///   SuccessState = List<Channels>
+  ///   LoadingState
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,41 +65,57 @@ class _HomeViewState extends State<HomeView> {
           )
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: ValueListenableBuilder(
-          valueListenable: vm.uiState,
-          builder: (_, state, widget) {
-            if (state == UiState.loading) {
-              return const CircularProgressIndicator();
+      body: StreamBuilder(
+          stream: vm.channels,
+          builder: (_, snapshot) {
+            if (snapshot.hasData) {
+              final channels = snapshot.data!;
+
+              if (channels.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Welcome $userName! :)',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Here, you can find all your chats.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: channels.length,
+                  itemBuilder: (_, index) {
+                    final currentChannel = channels[index];
+                    return ListTile(
+                      title: Text(
+                        currentChannel.type == ChannelType.private
+                            ? currentChannel.members[1]
+                            : currentChannel.description ?? 'no-description',
+                      ),
+                      subtitle: Text(currentChannel.createdDate ?? '-'),
+                    );
+                  },
+                ),
+              );
             }
 
-            return widget!;
-          },
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Welcome $userName! :)',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Here, you can find all your chats.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+            return const Center(child: CircularProgressIndicator());
+          }),
       floatingActionButton: FloatingActionButton(
         onPressed: _showContactsBottomSheet,
         child: const Icon(Icons.add),

@@ -1,2 +1,2 @@
-export 'chat_model.dart';
+export 'channel_model.dart';
 export 'message_model.dart';

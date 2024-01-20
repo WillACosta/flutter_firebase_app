@@ -1,5 +1,4 @@
 import 'package:firebase_auth_app/core/core.dart';
-import 'package:firebase_auth_app/features/authentication/data/mappers/user_mapper.dart';
 import 'package:firebase_auth_app/features/contacts/contacts.dart';
 import 'package:result_dart/functions.dart';
 import 'package:result_dart/result_dart.dart';

@@ -1,18 +1,36 @@
+import 'package:firebase_auth_app/core/di/injection_container.dart';
+import 'package:firebase_auth_app/presentation/views/chat/chat.dart';
 import 'package:flutter/material.dart';
 
-class ChatConversionView extends StatefulWidget {
-  const ChatConversionView({
-    super.key,
-    required this.userId,
-  });
+class ChatConversationArgs {
+  final String chattingWithId;
+  ChatConversationArgs({required this.chattingWithId});
+}
 
-  final String userId;
+class ChatConversionView extends StatefulWidget {
+  const ChatConversionView({super.key, required this.args});
+  final ChatConversationArgs args;
 
   @override
   State<ChatConversionView> createState() => _ChatConversionViewState();
 }
 
 class _ChatConversionViewState extends State<ChatConversionView> {
+  final textController = TextEditingController();
+  final vm = serviceLocator.get<ChatViewModel>();
+
+  @override
+  void initState() {
+    vm.createNewChat(widget.args.chattingWithId);
+    super.initState();
+  }
+
+  void onSendMessage() {
+    if (textController.text.isEmpty) return;
+    vm.sendMessage(textController.text);
+    textController.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,11 +56,33 @@ class _ChatConversionViewState extends State<ChatConversionView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            StreamBuilder(
+              stream: vm.messages,
+              builder: (_, snapshot) {
+                if (snapshot.hasData) {
+                  final messages = snapshot.data!;
+
+                  if (messages.isEmpty) return const SizedBox.shrink();
+
+                  return Expanded(
+                    child: ListView.builder(
+                      itemBuilder: (_, index) {
+                        return Text(messages[index].messageText);
+                      },
+                      itemCount: messages.length,
+                    ),
+                  );
+                }
+
+                return const Text('There is no messages yet');
+              },
+            ),
             TextField(
+              controller: textController,
               decoration: InputDecoration(
                 hintText: 'Type a message',
                 suffixIcon: IconButton(
-                  onPressed: () {},
+                  onPressed: onSendMessage,
                   icon: const Icon(Icons.send),
                 ),
               ),

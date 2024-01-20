@@ -1,5 +1,4 @@
 import 'package:firebase_auth_app/features/authentication/authentication.dart';
-import 'package:firebase_auth_app/features/authentication/data/models/network_user.dart';
 
 abstract class UserMapper {
   static User toDomain(NetWorkUser data) => User(
@@ -8,7 +7,6 @@ abstract class UserMapper {
         email: data.email,
       );
 
-  static toDomainList(List<NetWorkUser> data) => data.map(
-        (e) => UserMapper.toDomain(e),
-      );
+  static List<User> toDomainList(List<NetWorkUser> data) =>
+      data.map((e) => UserMapper.toDomain(e)).toList();
 }
