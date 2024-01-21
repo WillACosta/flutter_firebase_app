@@ -1,3 +1,5 @@
+import 'package:firebase_auth_app/features/authentication/authentication.dart';
+
 enum ChannelType {
   private,
   group;
@@ -12,7 +14,7 @@ enum ChannelType {
 class ChannelModel {
   final String id;
   final ChannelType type;
-  final List<String> members;
+  final List<User> members;
   final String? description;
   final String? image;
   final String? createdDate;

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class NetWorkUser {
   final String uid;
   final String name;
@@ -15,5 +17,17 @@ class NetWorkUser {
       name: map['name'] ?? '',
       email: map['email'] ?? '',
     );
+  }
+
+  factory NetWorkUser.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot, [
+    SnapshotOptions? options,
+  ]) {
+    final data = snapshot.data();
+    if (data == null) {
+      throw const FormatException("There is no data for serialize");
+    }
+
+    return NetWorkUser.fromMap(data);
   }
 }

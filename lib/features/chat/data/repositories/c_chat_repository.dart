@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth_app/features/chat/data/models/models.dart';
+import 'package:rxdart/rxdart.dart';
 
+import '../models/models.dart';
 import 'chat_repository.dart';
 
 class CChatRepository implements ChatRepository {
@@ -34,17 +35,25 @@ class CChatRepository implements ChatRepository {
     return currentChannelId;
   }
 
+  List<String> getUserIdsFromSnapshot(QuerySnapshot<Object?> snapshot) {
+    return snapshot.docs
+        .map((doc) => (doc['members'] as List<dynamic>).cast<String>())
+        .expand((members) => members)
+        .toList();
+  }
+
   @override
   Stream<List<NetworkChannel>> getChannelsByUserId(String id) {
     return _firestore
         .collection('groups')
         .where('createdBy', isEqualTo: id)
         .snapshots()
-        .map(
-      (data) {
-        return List.from(
-          data.docs.map((e) => NetworkChannel.fromMap(e.data())),
-        );
+        .map((response) => response.docs.map((e) => e.data()).toList())
+        .switchMap((channels) => Stream.fromFuture(_resolveUsers(channels)))
+        .map(NetworkChannel.fromMapList)
+        .doOnData(
+      (result) {
+        print(result.toList().toString());
       },
     );
   }
@@ -104,5 +113,33 @@ class CChatRepository implements ChatRepository {
       'image': image,
       'members': members
     });
+  }
+
+  Future<List<Map<String, dynamic>>> _resolveUsers(
+    List<Map<String, dynamic>> data,
+  ) async {
+    List<Map<String, dynamic>> result = [];
+
+    for (var e in data) {
+      final users = await _fetchMultipleUsers(e['members']);
+      e.update('members', (value) => users);
+      result.add(e);
+    }
+
+    return result;
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchMultipleUsers(
+    List<dynamic> ids,
+  ) async {
+    List<Map<String, dynamic>> result = [];
+
+    for (var id in ids) {
+      final response = await _firestore.collection('users').doc(id).get();
+      final data = response.data() ?? {};
+      result.add(data);
+    }
+
+    return result;
   }
 }

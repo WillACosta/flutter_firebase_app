@@ -104,7 +104,7 @@ class _HomeViewState extends State<HomeView> {
                     return ListTile(
                       title: Text(
                         currentChannel.type == ChannelType.private
-                            ? currentChannel.members[1]
+                            ? currentChannel.members[1].name
                             : currentChannel.description ?? 'no-description',
                       ),
                       subtitle: Text(currentChannel.createdDate ?? '-'),

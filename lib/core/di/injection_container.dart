@@ -22,7 +22,7 @@ void setUpInjectionContainer() {
     () => RegisterRepository(serviceLocator.get()),
   );
   serviceLocator.registerFactory(
-    () => ContactsRepository(serviceLocator.get()),
+    () => ContactsRepository(serviceLocator.get(), serviceLocator.get()),
   );
   serviceLocator.registerFactory<ChatRepository>(
     () => CChatRepository(serviceLocator.get()),

@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_app/features/authentication/authentication.dart'
+    hide User;
 
 abstract class FirebaseAuthAdapter {
   Stream<User?> authStatus();
@@ -25,4 +27,6 @@ abstract class FirestoreDbAdapter {
     required String displayName,
     required String email,
   });
+
+  Future<NetWorkUser> getUser(String id);
 }

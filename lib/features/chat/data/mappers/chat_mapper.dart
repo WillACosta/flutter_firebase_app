@@ -1,6 +1,7 @@
+import 'package:firebase_auth_app/features/authentication/authentication.dart';
+
 import '../../chat.dart';
-import '../models/network_channel.dart';
-import '../models/network_message.dart';
+import '../models/models.dart';
 
 abstract class ChatDataMapper {
   static MessageModel toMessageDomain(NetworkMessage data) {
@@ -15,7 +16,7 @@ abstract class ChatDataMapper {
   static ChannelModel toChannelDomain(NetworkChannel data) {
     return ChannelModel(
       id: data.id,
-      members: data.members,
+      members: UserMapper.toDomainList(data.members),
       createdBy: data.createdBy,
       type: ChannelType.fromString(data.type),
       createdDate: data.createdAt,
