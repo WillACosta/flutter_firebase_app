@@ -1,19 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_app/features/authentication/authentication.dart';
 
-import '../../../core/core.dart';
+import '../../../../core/core.dart';
 
 class ContactsRepository {
-  ContactsRepository(this._firestore, this._authRepository);
-
-  final AuthenticationRepository _authRepository;
+  ContactsRepository(this._firestore);
   final FirebaseFirestore _firestore;
 
   Future<List<NetWorkUser>> getUsers() async {
-    final results = await _firestore
-        .collection(DBCollection.users)
-        .where('uid', isNotEqualTo: _authRepository.userId)
-        .get();
+    final results = await _firestore.collection(DBCollection.users).get();
 
     return List.from(
       results.docs.map((e) => NetWorkUser.fromMap(e.data())),

@@ -1,55 +1,43 @@
-import 'package:firebase_auth_app/features/authentication/authentication.dart';
 import 'package:firebase_auth_app/features/chat/domain/domain.dart';
-import 'package:flutter/foundation.dart';
+import 'package:firebase_auth_app/presentation/presentation.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../core/core.dart';
 
 class ChatViewModel extends ViewModel {
   ChatViewModel(
     this._createPrivateChatUseCase,
-    this._authRepository,
+    this._userViewModel,
     this._getMessagesByChannelUseCase,
     this._sendMessageUseCase,
-  ) {
-    _currentChannelId.value = _authRepository.userId;
-  }
+  );
 
+  final UserViewModel _userViewModel;
   final CreatePrivateChatUseCase _createPrivateChatUseCase;
   final GetMessagesByChannelUseCase _getMessagesByChannelUseCase;
   final SendMessageUseCase _sendMessageUseCase;
-  final AuthenticationRepository _authRepository;
 
-  final _currentChannelId = ValueNotifier("");
-  final _currentUserId = ValueNotifier("");
+  String _currentChannelId = '';
 
-  Future<void> createNewChat(String toUserId) async {
-    setState(UiState.loading);
-
-    final result = await _createPrivateChatUseCase(
+  Stream<List<MessageModel>> messagesByChannel(String chattingWithId) {
+    return _createPrivateChatUseCase(
       CreatePrivateChatParams(
-        currentUserId: _currentUserId.value,
-        chattingWithId: toUserId,
+        currentUserId: _userViewModel.currentUserId,
+        chattingWithId: chattingWithId,
       ),
-    );
-
-    result.fold(
-      (success) {
-        _currentChannelId.value = success;
-        setState(UiState.success);
+    ).switchMap(
+      (channelId) {
+        _currentChannelId = channelId;
+        return _getMessagesByChannelUseCase(channelId);
       },
-      (failure) => setState(UiState.error),
     );
-  }
-
-  Stream<List<MessageModel>> get messages {
-    return _getMessagesByChannelUseCase(_currentChannelId.value);
   }
 
   Future<void> sendMessage(String message) async {
     await _sendMessageUseCase(
       SendMessageParams(
-        channelId: _currentChannelId.value,
-        messageFrom: _currentUserId.value,
+        channelId: _currentChannelId,
+        messageFrom: _userViewModel.currentUserId,
         message: message,
       ),
     );

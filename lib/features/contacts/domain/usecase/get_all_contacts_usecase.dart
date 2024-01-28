@@ -3,7 +3,7 @@ import 'package:firebase_auth_app/features/contacts/contacts.dart';
 import 'package:result_dart/functions.dart';
 import 'package:result_dart/result_dart.dart';
 
-import '../../authentication/authentication.dart';
+import '../../../authentication/authentication.dart';
 
 class GetAllContactsUseCase {
   final ContactsRepository _repository;

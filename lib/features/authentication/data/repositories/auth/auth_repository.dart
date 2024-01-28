@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class FirebaseAuthAdapter {
+abstract class AuthenticationRepository {
   Stream<User?> authStatus();
   Stream<User?> userChanges();
 
@@ -17,13 +17,4 @@ abstract class FirebaseAuthAdapter {
   Future<void> signOut();
 
   User? get userSnapshot;
-  String get userId;
-}
-
-abstract class FirestoreDbAdapter {
-  Future<void> saveUserToStorage({
-    required String uid,
-    required String displayName,
-    required String email,
-  });
 }

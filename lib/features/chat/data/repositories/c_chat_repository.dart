@@ -13,14 +13,14 @@ class CChatRepository implements ChatRepository {
   final ContactsRepository _contactsRepository;
 
   @override
-  Future<String> createChannel({
+  Stream<String> createChannel({
     required String createdByUid,
     required List<String> members,
     required String type,
     String? description,
     String? image,
     String? modifiedAt,
-  }) async {
+  }) {
     final payload = {
       'createdBy': createdByUid,
       'type': type,
@@ -30,13 +30,19 @@ class CChatRepository implements ChatRepository {
       'members': members
     };
 
-    final result =
-        await _firestore.collection(DBCollection.channels).add(payload);
-
-    final currentChannelId = result.id;
-    await _updateChannelWithGeneratedUid(currentChannelId);
-
-    return currentChannelId;
+    return _firestore
+        .collection(DBCollection.channels)
+        .add(payload)
+        .asStream()
+        .switchMap(
+      (result) {
+        return Rx.combineLatest2(
+          Stream.value(result.id),
+          _updateChannelWithGeneratedUid(result.id),
+          (channelId, _) => channelId,
+        );
+      },
+    );
   }
 
   @override
@@ -87,11 +93,11 @@ class CChatRepository implements ChatRepository {
     return _firestore.collection(DBCollection.channels).doc(channelId).delete();
   }
 
-  Future<void> _updateChannelWithGeneratedUid(String channelId) async {
-    _firestore
+  Stream<void> _updateChannelWithGeneratedUid(String channelId) {
+    return _firestore
         .collection(DBCollection.channels)
         .doc(channelId)
-        .update({'id': channelId});
+        .update({'id': channelId}).asStream();
   }
 
   AsyncMapList _resolveMembersList(

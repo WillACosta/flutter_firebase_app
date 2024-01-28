@@ -4,3 +4,7 @@ abstract final class DBCollection {
   static const chats = 'chats';
   static const messages = 'messages';
 }
+
+abstract final class StorageKeys {
+  static const userData = '@user-data';
+}

@@ -19,11 +19,7 @@ class _ChatConversionViewState extends State<ChatConversionView> {
   final textController = TextEditingController();
   final vm = serviceLocator.get<ChatViewModel>();
 
-  @override
-  void initState() {
-    vm.createNewChat(widget.args.chattingWithId);
-    super.initState();
-  }
+  String get chattingWithId => widget.args.chattingWithId;
 
   void onSendMessage() {
     if (textController.text.isEmpty) return;
@@ -57,7 +53,7 @@ class _ChatConversionViewState extends State<ChatConversionView> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             StreamBuilder(
-              stream: vm.messages,
+              stream: vm.messagesByChannel(chattingWithId),
               builder: (_, snapshot) {
                 if (snapshot.hasData) {
                   final messages = snapshot.data!;

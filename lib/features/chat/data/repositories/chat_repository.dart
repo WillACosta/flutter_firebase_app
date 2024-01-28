@@ -11,7 +11,7 @@ abstract class ChatRepository {
     required String messageText,
   });
 
-  Future<String> createChannel({
+  Stream<String> createChannel({
     required String createdByUid,
     required List<String> members,
     required String type,

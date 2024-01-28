@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_app/features/chat/chat.dart';
 import 'package:firebase_auth_app/features/contacts/contacts.dart';
+import 'package:firebase_auth_app/features/profile/data/user_profile_repository.dart';
+import 'package:firebase_auth_app/infra/infra.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../features/authentication/authentication.dart';
@@ -15,17 +17,23 @@ void setUpInjectionContainer() {
   serviceLocator.registerSingleton(FirebaseFirestore.instance);
 
   // data layer
-  serviceLocator.registerFactory(
-    () => AuthenticationRepository(serviceLocator.get()),
+  serviceLocator.registerFactory<AuthenticationRepository>(
+    () => CAuthenticationRepository(serviceLocator.get()),
+  );
+  serviceLocator.registerFactory<RegisterRepository>(
+    () => CRegisterRepository(serviceLocator.get(), serviceLocator.get()),
   );
   serviceLocator.registerFactory(
-    () => RegisterRepository(serviceLocator.get()),
-  );
-  serviceLocator.registerFactory(
-    () => ContactsRepository(serviceLocator.get(), serviceLocator.get()),
+    () => ContactsRepository(serviceLocator.get()),
   );
   serviceLocator.registerFactory<ChatRepository>(
     () => CChatRepository(serviceLocator.get(), serviceLocator.get()),
+  );
+  serviceLocator.registerFactory(
+    () => UserProfileRepository(serviceLocator.get()),
+  );
+  serviceLocator.registerFactory<SecureStorageService>(
+    () => CSecureStorageService(),
   );
 
   // use cases
@@ -56,11 +64,13 @@ void setUpInjectionContainer() {
 
   // view models
   serviceLocator.registerSingleton(SplashViewModel(serviceLocator.get()));
+  serviceLocator.registerSingleton(UserViewModel(serviceLocator.get()));
   serviceLocator.registerFactory(() => SigInViewModel(serviceLocator.get()));
   serviceLocator.registerFactory(() => RegisterViewModel(serviceLocator.get()));
 
   serviceLocator.registerFactory(
     () => HomeViewModel(
+      serviceLocator.get(),
       serviceLocator.get(),
       serviceLocator.get(),
       serviceLocator.get(),

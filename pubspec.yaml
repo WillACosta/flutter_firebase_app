@@ -21,6 +21,7 @@ dependencies:
   rxdart: ^0.27.7
   cloud_firestore: ^4.13.0
   uuid: ^4.2.2
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:

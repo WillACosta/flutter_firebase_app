@@ -23,7 +23,7 @@ class RegisterUserUseCase {
 
       final user = credentials.user;
 
-      await _registerRepository.saveUserToStorage(
+      await _registerRepository.registerUserToTheStorage(
         uid: user?.uid ?? const Uuid().v4(),
         displayName: user?.displayName ?? 'Unknown',
         email: user?.email ?? 'No email address',

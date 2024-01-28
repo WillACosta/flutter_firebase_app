@@ -18,7 +18,7 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final vm = serviceLocator.get<HomeViewModel>();
 
-  late String userName;
+  String userName = '';
   late StreamSubscription _subscription;
 
   @override

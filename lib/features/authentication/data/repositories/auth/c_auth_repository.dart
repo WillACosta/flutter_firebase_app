@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'firestore_adapter.dart';
+import 'auth_repository.dart';
 
-class AuthenticationRepository implements FirebaseAuthAdapter {
-  AuthenticationRepository(this._firebaseAuth);
+class CAuthenticationRepository implements AuthenticationRepository {
+  CAuthenticationRepository(this._firebaseAuth);
   final FirebaseAuth _firebaseAuth;
 
   @override
@@ -18,9 +18,6 @@ class AuthenticationRepository implements FirebaseAuthAdapter {
 
   @override
   User? get userSnapshot => _firebaseAuth.currentUser;
-
-  @override
-  String get userId => userSnapshot?.uid ?? "INVALID";
 
   @override
   Future<void> signOut() async {
