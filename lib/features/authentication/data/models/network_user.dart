@@ -20,12 +20,12 @@ class NetWorkUser {
   }
 
   factory NetWorkUser.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot, [
-    SnapshotOptions? options,
-  ]) {
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) {
     final data = snapshot.data();
+
     if (data == null) {
-      throw const FormatException("There is no data for serialize");
+      throw const FormatException("There is no data for deserialize");
     }
 
     return NetWorkUser.fromMap(data);

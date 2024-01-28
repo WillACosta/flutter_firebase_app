@@ -10,7 +10,7 @@ class GetAllContactsUseCase {
 
   GetAllContactsUseCase(this._repository);
 
-  Future<Result<List<User>, AppFailure>> call() async {
+  Future<Result<List<UserModel>, AppFailure>> call() async {
     try {
       final result = await _repository.getUsers();
       return successOf(UserMapper.toDomainList(result));

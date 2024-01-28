@@ -8,7 +8,7 @@ class ContactsView extends StatelessWidget {
     this.onSelectedContact,
   });
 
-  final List<User> users;
+  final List<UserModel> users;
   final void Function(String)? onSelectedContact;
 
   void _handleSelectedContact(String uid) {

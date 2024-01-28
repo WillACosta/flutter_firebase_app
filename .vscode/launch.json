@@ -5,18 +5,18 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "firebase_auth",
+      "name": "firebase_app",
       "request": "launch",
       "type": "dart"
     },
     {
-      "name": "firebase_auth (profile mode)",
+      "name": "firebase_app (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile"
     },
     {
-      "name": "firebase_auth (release mode)",
+      "name": "firebase_app (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release"

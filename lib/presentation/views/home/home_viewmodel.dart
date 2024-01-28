@@ -10,25 +10,31 @@ class HomeViewModel extends ViewModel {
     this._authRepository,
     this._getContactsUseCase,
     this._getChannelsByUserUseCase,
+    this._getUserUseCase,
   );
 
   final AuthenticationRepository _authRepository;
   final GetAllContactsUseCase _getContactsUseCase;
   final GetChannelsByUserUseCase _getChannelsByUserUseCase;
+  final GetUserUseCase _getUserUseCase;
 
-  final ValueNotifier<List<User>> contactsState = ValueNotifier([]);
+  final ValueNotifier<List<UserModel>> contactsState = ValueNotifier([]);
+
+  Stream<UserModel> get currentUser {
+    return _getUserUseCase(_authRepository.userId);
+  }
 
   Stream<List<ChannelModel>> get channels {
     return _getChannelsByUserUseCase(_authRepository.userId);
   }
 
-  logout() {
-    _authRepository.signOut();
+  Future<void> logout() {
+    return _authRepository.signOut();
   }
 
-  void init() {
+  Future<void> init() async {
     setState(UiState.loading);
-    Future.wait([_getContacts()]);
+    await _getContacts();
   }
 
   Future<void> _getContacts() async {

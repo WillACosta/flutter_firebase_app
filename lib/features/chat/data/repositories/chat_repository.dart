@@ -1,8 +1,9 @@
+import '../../../../core/core.dart';
 import '../models/models.dart';
 
 abstract class ChatRepository {
   Stream<dynamic> getChannelsByUserId(String uid);
-  Stream<List<NetworkMessage>> getMessagesByChatId(String uid);
+  StreamListOf<NetworkMessage> getMessagesByChatId(String uid);
 
   Future<void> sendMessage({
     required String channelId,
@@ -18,4 +19,6 @@ abstract class ChatRepository {
     String? image,
     String? modifiedAt,
   });
+
+  Future<void> deleteChannel(String channelId);
 }

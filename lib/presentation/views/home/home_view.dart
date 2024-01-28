@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth_app/core/core.dart';
 import 'package:firebase_auth_app/features/chat/chat.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +17,22 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final vm = serviceLocator.get<HomeViewModel>();
-  final userName = 'Will';
+
+  late String userName;
+  late StreamSubscription _subscription;
+
+  @override
+  void initState() {
+    vm.init();
+    _setListeners();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
 
   void _navigateToChatScreen(String userId) {
     Navigator.pushNamed(
@@ -38,18 +55,11 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  @override
-  void initState() {
-    vm.init();
-    super.initState();
+  void _setListeners() {
+    _subscription = vm.currentUser.listen((data) {
+      userName = data.name;
+    });
   }
-
-  /// TODO:
-  /// 1. refactor view code for simplicity
-  /// 2. Create a new Widget class for separate logic of:
-  ///   EmptyState
-  ///   SuccessState = List<Channels>
-  ///   LoadingState
 
   @override
   Widget build(BuildContext context) {
@@ -66,56 +76,57 @@ class _HomeViewState extends State<HomeView> {
         ],
       ),
       body: StreamBuilder(
-          stream: vm.channels,
-          builder: (_, snapshot) {
-            if (snapshot.hasData) {
-              final channels = snapshot.data!;
+        stream: vm.channels,
+        builder: (_, snapshot) {
+          if (snapshot.hasData) {
+            final channels = snapshot.data!;
 
-              if (channels.isEmpty) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Welcome $userName! :)',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+            if (channels.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Welcome $userName! :)',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Here, you can find all your chats.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Here, you can find all your chats.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.outline,
                       ),
-                    ],
-                  ),
-                );
-              }
-
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: channels.length,
-                  itemBuilder: (_, index) {
-                    final currentChannel = channels[index];
-                    return ListTile(
-                      title: Text(
-                        currentChannel.type == ChannelType.private
-                            ? currentChannel.members[1].name
-                            : currentChannel.description ?? 'no-description',
-                      ),
-                      subtitle: Text(currentChannel.createdDate ?? '-'),
-                    );
-                  },
+                    ),
+                  ],
                 ),
               );
             }
 
-            return const Center(child: CircularProgressIndicator());
-          }),
+            return Expanded(
+              child: ListView.builder(
+                itemCount: channels.length,
+                itemBuilder: (_, index) {
+                  final currentChannel = channels[index];
+                  return ListTile(
+                    title: Text(
+                      currentChannel.type == ChannelType.private
+                          ? currentChannel.members[1].name
+                          : currentChannel.description ?? 'no-description',
+                    ),
+                    subtitle: Text(currentChannel.createdDate ?? '-'),
+                  );
+                },
+              ),
+            );
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showContactsBottomSheet,
         child: const Icon(Icons.add),

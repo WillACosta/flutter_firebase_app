@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class NetworkMessage {
   final String id;
   final String sentBy;
@@ -18,5 +20,24 @@ class NetworkMessage {
       messageText: map['messageText'] ?? '',
       sentAt: map['sentAt'],
     );
+  }
+
+  factory NetworkMessage.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+  ) {
+    final data = snapshot.data();
+
+    if (data == null) {
+      throw const FormatException("There is no data for deserialize");
+    }
+
+    return NetworkMessage.fromMap(data);
+  }
+
+  static List<NetworkMessage> fromFirestoreList(
+    QuerySnapshot<Map<String, dynamic>> data,
+  ) {
+    final documents = data.docs;
+    return List.from(documents.map(NetworkMessage.fromFirestore));
   }
 }

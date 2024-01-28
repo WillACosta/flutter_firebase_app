@@ -25,7 +25,7 @@ void setUpInjectionContainer() {
     () => ContactsRepository(serviceLocator.get(), serviceLocator.get()),
   );
   serviceLocator.registerFactory<ChatRepository>(
-    () => CChatRepository(serviceLocator.get()),
+    () => CChatRepository(serviceLocator.get(), serviceLocator.get()),
   );
 
   // use cases
@@ -50,6 +50,9 @@ void setUpInjectionContainer() {
   serviceLocator.registerFactory(
     () => GetChannelsByUserUseCase(serviceLocator.get()),
   );
+  serviceLocator.registerFactory(
+    () => GetUserUseCase(serviceLocator.get()),
+  );
 
   // view models
   serviceLocator.registerSingleton(SplashViewModel(serviceLocator.get()));
@@ -58,6 +61,7 @@ void setUpInjectionContainer() {
 
   serviceLocator.registerFactory(
     () => HomeViewModel(
+      serviceLocator.get(),
       serviceLocator.get(),
       serviceLocator.get(),
       serviceLocator.get(),

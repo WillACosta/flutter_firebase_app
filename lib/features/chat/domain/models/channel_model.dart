@@ -14,7 +14,7 @@ enum ChannelType {
 class ChannelModel {
   final String id;
   final ChannelType type;
-  final List<User> members;
+  final List<UserModel> members;
   final String? description;
   final String? image;
   final String? createdDate;
