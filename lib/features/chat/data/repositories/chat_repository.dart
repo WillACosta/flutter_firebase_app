@@ -4,6 +4,7 @@ import '../models/models.dart';
 abstract class ChatRepository {
   Stream<dynamic> getChannelsByUserId(String uid);
   StreamListOf<NetworkMessage> getMessagesByChatId(String uid);
+  Stream<String?> getCurrentChannelOrNull(List<String> ids);
 
   Future<void> sendMessage({
     required String channelId,

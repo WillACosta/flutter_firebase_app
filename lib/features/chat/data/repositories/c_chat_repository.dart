@@ -49,7 +49,7 @@ class CChatRepository implements ChatRepository {
   StreamListOf<NetworkChannel> getChannelsByUserId(String id) {
     return _firestore
         .collection(DBCollection.channels)
-        .where('createdBy', isEqualTo: id)
+        .where('members', arrayContains: id)
         .snapshots()
         .map((response) => response.docs.map((e) => e.data()).toList())
         .switchMap(
@@ -91,6 +91,28 @@ class CChatRepository implements ChatRepository {
   @override
   Future<void> deleteChannel(String channelId) {
     return _firestore.collection(DBCollection.channels).doc(channelId).delete();
+  }
+
+  @override
+  Stream<String?> getCurrentChannelOrNull(List<dynamic> ids) {
+    final equality = const ListEquality().equals;
+
+    return _firestore
+        .collection(DBCollection.channels)
+        .where('members', arrayContainsAny: ids)
+        .snapshots()
+        .map(
+      (response) {
+        final channels = response.docs.where((e) {
+          final data = e.data();
+          final isEqual = equality(data['members'], ids);
+          return isEqual;
+        }).toList();
+
+        if (channels.isEmpty) return null;
+        return channels.first.id;
+      },
+    ).onErrorReturnWith((_, __) => null);
   }
 
   Stream<void> _updateChannelWithGeneratedUid(String channelId) {

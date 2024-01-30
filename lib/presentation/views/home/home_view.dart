@@ -5,7 +5,9 @@ import 'package:firebase_auth_app/features/chat/chat.dart';
 import 'package:flutter/material.dart';
 
 import '../chat/chat.dart';
+import '../contacts/components/components.dart';
 import '../contacts/contacts_view.dart';
+import 'components/components.dart';
 import 'home_viewmodel.dart';
 
 class HomeView extends StatefulWidget {
@@ -81,43 +83,18 @@ class _HomeViewState extends State<HomeView> {
           if (snapshot.hasData) {
             final channels = snapshot.data!;
 
-            if (channels.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Welcome $userName! :)',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Here, you can find all your chats.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
+            if (channels.isEmpty) EmptyChats(userName: userName);
 
             return Expanded(
               child: ListView.builder(
                 itemCount: channels.length,
                 itemBuilder: (_, index) {
                   final currentChannel = channels[index];
-                  return ListTile(
-                    title: Text(
-                      currentChannel.type == ChannelType.private
-                          ? currentChannel.members[1].name
-                          : currentChannel.description ?? 'no-description',
-                    ),
-                    subtitle: Text(currentChannel.createdDate ?? '-'),
+                  return ContactItem(
+                    title: currentChannel.type == ChannelType.private
+                        ? currentChannel.members[1].name
+                        : currentChannel.description ?? 'no-description',
+                    description: currentChannel.createdDate ?? '-',
                   );
                 },
               ),

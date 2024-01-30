@@ -58,8 +58,6 @@ class _ChatConversionViewState extends State<ChatConversionView> {
                 if (snapshot.hasData) {
                   final messages = snapshot.data!;
 
-                  if (messages.isEmpty) return const SizedBox.shrink();
-
                   return Expanded(
                     child: ListView.builder(
                       itemBuilder: (_, index) {
@@ -70,7 +68,7 @@ class _ChatConversionViewState extends State<ChatConversionView> {
                   );
                 }
 
-                return const Text('There is no messages yet');
+                return const SizedBox.shrink();
               },
             ),
             TextField(
