@@ -6,15 +6,18 @@ class ContactItem extends StatelessWidget {
     required this.title,
     required this.description,
     this.imageUrl,
+    this.onTap,
   });
 
   final String title;
   final String description;
   final String? imageUrl;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: onTap,
       leading: Container(
         width: 50,
         height: 50,

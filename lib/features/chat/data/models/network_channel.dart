@@ -26,7 +26,7 @@ class NetworkChannel {
       members: List.from(map['members'].map(NetWorkUser.fromMap)),
       description: map['description'],
       image: map['image'],
-      createdAt: map['createdDate'],
+      createdAt: map['createdAt'],
       createdBy: map['createdBy'],
     );
   }

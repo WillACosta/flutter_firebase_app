@@ -85,19 +85,22 @@ class _HomeViewState extends State<HomeView> {
 
             if (channels.isEmpty) EmptyChats(userName: userName);
 
-            return Expanded(
-              child: ListView.builder(
-                itemCount: channels.length,
-                itemBuilder: (_, index) {
-                  final currentChannel = channels[index];
-                  return ContactItem(
-                    title: currentChannel.type == ChannelType.private
+            return ListView.builder(
+              itemCount: channels.length,
+              itemBuilder: (_, index) {
+                final currentChannel = channels[index];
+                final chattingWithId = currentChannel.members[1].id;
+                final channelDescription = currentChannel.createdDate ?? '-';
+                final channelTitle = currentChannel.type == ChannelType.private
                         ? currentChannel.members[1].name
-                        : currentChannel.description ?? 'no-description',
-                    description: currentChannel.createdDate ?? '-',
-                  );
-                },
-              ),
+                    : currentChannel.description ?? 'no-description';
+
+                return ContactItem(
+                  onTap: () => _navigateToChatScreen(chattingWithId),
+                  title: channelTitle,
+                  description: channelDescription,
+                );
+              },
             );
           }
 

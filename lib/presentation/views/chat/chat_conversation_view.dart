@@ -2,6 +2,8 @@ import 'package:firebase_auth_app/core/di/injection_container.dart';
 import 'package:firebase_auth_app/presentation/views/chat/chat.dart';
 import 'package:flutter/material.dart';
 
+import 'components/components.dart';
+
 class ChatConversationArgs {
   final String chattingWithId;
   ChatConversationArgs({required this.chattingWithId});
@@ -61,7 +63,11 @@ class _ChatConversionViewState extends State<ChatConversionView> {
                   return Expanded(
                     child: ListView.builder(
                       itemBuilder: (_, index) {
-                        return Text(messages[index].messageText);
+                        final currentMessage = messages[index];
+                        return MessageBubble(
+                          isReceived: currentMessage.sentBy == chattingWithId,
+                          message: currentMessage.messageText,
+                        );
                       },
                       itemCount: messages.length,
                     ),

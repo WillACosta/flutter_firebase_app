@@ -19,7 +19,7 @@ abstract class ChatDataMapper {
       members: UserMapper.toDomainList(data.members),
       createdBy: data.createdBy,
       type: ChannelType.fromString(data.type),
-      createdDate: data.createdAt,
+      createdDate: DateTime.parse(data.createdAt!).toString(),
       description: data.description,
       image: data.image,
     );
