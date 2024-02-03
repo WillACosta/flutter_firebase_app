@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth_app/core/core.dart';
-import 'package:firebase_auth_app/features/chat/chat.dart';
 import 'package:flutter/material.dart';
 
 import '../chat/chat.dart';
@@ -89,11 +88,10 @@ class _HomeViewState extends State<HomeView> {
               itemCount: channels.length,
               itemBuilder: (_, index) {
                 final currentChannel = channels[index];
-                final chattingWithId = currentChannel.members[1].id;
+
                 final channelDescription = currentChannel.createdDate ?? '-';
-                final channelTitle = currentChannel.type == ChannelType.private
-                        ? currentChannel.members[1].name
-                    : currentChannel.description ?? 'no-description';
+                final chattingWithId = vm.resolveChattingWith(currentChannel);
+                final channelTitle = vm.resolveChannelName(currentChannel);
 
                 return ContactItem(
                   onTap: () => _navigateToChatScreen(chattingWithId),

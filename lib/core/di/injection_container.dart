@@ -18,10 +18,10 @@ void setUpInjectionContainer() {
 
   // data layer
   serviceLocator.registerFactory<AuthenticationRepository>(
-    () => CAuthenticationRepository(serviceLocator.get()),
+    () => CAuthenticationRepository(serviceLocator.get(), serviceLocator.get()),
   );
   serviceLocator.registerFactory<RegisterRepository>(
-    () => CRegisterRepository(serviceLocator.get(), serviceLocator.get()),
+    () => CRegisterRepository(serviceLocator.get()),
   );
   serviceLocator.registerFactory(
     () => ContactsRepository(serviceLocator.get()),
@@ -30,7 +30,7 @@ void setUpInjectionContainer() {
     () => CChatRepository(serviceLocator.get(), serviceLocator.get()),
   );
   serviceLocator.registerFactory(
-    () => UserProfileRepository(serviceLocator.get()),
+    () => UserProfileRepository(serviceLocator.get(), serviceLocator.get()),
   );
   serviceLocator.registerFactory<SecureStorageService>(
     () => CSecureStorageService(),

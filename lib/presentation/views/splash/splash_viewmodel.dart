@@ -11,8 +11,8 @@ class SplashViewModel {
   init(BuildContext context) async {
     await Future.delayed(const Duration(microseconds: 2000));
 
-    _authRepository.authStatus().listen((user) {
-      if (user != null) {
+    _authRepository.isAuthenticated().listen((authenticated) {
+      if (authenticated) {
         Navigator.pushNamed(context, '/home');
       } else {
         Navigator.pushNamed(context, '/signin');

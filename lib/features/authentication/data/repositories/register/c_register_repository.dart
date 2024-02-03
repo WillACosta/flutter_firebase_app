@@ -1,34 +1,21 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth_app/infra/infra.dart';
 
 import '../../../../../core/core.dart';
-import 'register_repository.dart';
+import '../../data.dart';
 
 final class CRegisterRepository implements RegisterRepository {
-  CRegisterRepository(this._firestore, this._secureStorageService);
-
+  CRegisterRepository(this._firestore);
   final FirebaseFirestore _firestore;
-  final SecureStorageService _secureStorageService;
 
   @override
-  Future<void> registerUserToTheStorage({
-    required String uid,
-    required String displayName,
-    required String email,
-  }) async {
-    final payload = {
-      'uid': uid,
-      'name': displayName,
-      'email': email,
-    };
+  Future<void> registerUserToTheStorage(Map<String, dynamic> userMap) {
+    if (!userMap.containsKey('uid')) {
+      throw Exception('Invalid uid for new User entry');
+    }
 
-    await _secureStorageService.save(
-      key: StorageKeys.userData,
-      value: jsonEncode(payload),
-    );
-
-    await _firestore.collection(DBCollection.users).doc(uid).set(payload);
+    return _firestore
+        .collection(DBCollection.users)
+        .doc(userMap['uid'])
+        .set(userMap);
   }
 }

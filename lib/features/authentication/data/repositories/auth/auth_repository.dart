@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthenticationRepository {
-  Stream<User?> authStatus();
+  Stream<bool> isAuthenticated();
   Stream<User?> userChanges();
 
-  Future<UserCredential> signInWithEmailAndPassword({
+  Future<void> signInWithEmailAndPassword({
     required String emailAddress,
     required String password,
   });

@@ -51,4 +51,28 @@ class HomeViewModel extends ViewModel {
       (failure) => setState(UiState.error),
     );
   }
+
+  String resolveChannelName(ChannelModel channel) {
+    final type = channel.type;
+    final members = channel.members;
+    final channelName = channel.description;
+
+    if (type == ChannelType.private) {
+      final chattingWith = members
+          .where((user) => user.id != _userViewModel.currentUserId)
+          .toList();
+      return chattingWith[0].name;
+    } else {
+      return channelName!;
+    }
+  }
+
+  String resolveChattingWith(ChannelModel channel) {
+    final members = channel.members;
+
+    final chattingWith = members
+        .where((user) => user.id != _userViewModel.currentUserId)
+        .toList();
+    return chattingWith[0].id;
+  }
 }

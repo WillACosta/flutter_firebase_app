@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 class NetWorkUser {
   final String uid;
@@ -29,5 +31,21 @@ class NetWorkUser {
     }
 
     return NetWorkUser.fromMap(data);
+  }
+
+  static Map<String, dynamic> fromFirebaseAuth(User? user) {
+    return {
+      'uid': user?.uid ?? const Uuid().v4(),
+      'displayName': user?.displayName ?? 'Unknown',
+      'email': user?.email ?? 'No email address',
+    };
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uid': uid,
+      'name': name,
+      'email': email,
+    };
   }
 }

@@ -6,19 +6,23 @@ import 'package:firebase_auth_app/infra/infra.dart';
 import '../../authentication/authentication.dart';
 
 class UserProfileRepository {
-  UserProfileRepository(this._secureStorageService);
+  UserProfileRepository(
+    this._secureStorageService,
+    this._authRepository,
+  );
+
   final SecureStorageService _secureStorageService;
+  final AuthenticationRepository _authRepository;
 
-  Future<String> idSnapshot() async {
-    final user = await getUserFromStorage();
-    return user.id;
-  }
-
-  Future<UserModel> getUserFromStorage() async {
+  Future<UserModel?> getUserFromStorage() async {
     final resultString = await _secureStorageService.getByKey(
-          StorageKeys.userData,
-        ) ??
-        "{}";
+      StorageKeys.userData,
+    );
+
+    if (resultString == null) {
+      await _authRepository.signOut();
+      return null;
+    }
 
     final resultMap = jsonDecode(resultString) as Map<String, dynamic>;
     return UserMapper.toDomain(NetWorkUser.fromMap(resultMap));

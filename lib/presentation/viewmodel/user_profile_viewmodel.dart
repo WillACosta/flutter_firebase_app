@@ -21,6 +21,6 @@ class UserViewModel extends ViewModel {
     final user = await _profileRepository.getUserFromStorage();
 
     _currentUser.value = user;
-    _currentUserId.value = user.id;
+    _currentUserId.value = user?.id ?? '';
   }
 }
