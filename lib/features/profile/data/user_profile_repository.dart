@@ -14,17 +14,17 @@ class UserProfileRepository {
   final SecureStorageService _secureStorageService;
   final AuthenticationRepository _authRepository;
 
-  Future<UserModel?> getUserFromStorage() async {
-    final resultString = await _secureStorageService.getByKey(
+  Future<UserModel> getUserFromStorage() async {
+    final userJson = await _secureStorageService.getByKey(
       StorageKeys.userData,
     );
 
-    if (resultString == null) {
-      await _authRepository.signOut();
-      return null;
+    if (userJson == null) {
+      final user = NetWorkUser.fromFirebaseAuth(_authRepository.userSnapshot);
+      return UserMapper.toDomain(NetWorkUser.fromMap(user));
     }
 
-    final resultMap = jsonDecode(resultString) as Map<String, dynamic>;
+    final resultMap = jsonDecode(userJson) as Map<String, dynamic>;
     return UserMapper.toDomain(NetWorkUser.fromMap(resultMap));
   }
 }

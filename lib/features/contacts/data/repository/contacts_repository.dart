@@ -27,8 +27,6 @@ class ContactsRepository {
     List<Map<String, dynamic>> result = [];
 
     for (var id in ids) {
-      // TODO: get user from Contacts and use Cache or Network
-
       final response = await _firestore
           .collection(
             DBCollection.users,

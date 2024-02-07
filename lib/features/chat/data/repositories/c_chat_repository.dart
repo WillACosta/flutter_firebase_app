@@ -51,7 +51,9 @@ class CChatRepository implements ChatRepository {
         .collection(DBCollection.channels)
         .where('members', arrayContains: id)
         .snapshots()
-        .map((response) => response.docs.map((e) => e.data()).toList())
+        .map((response) {
+          return response.docs.map((e) => e.data()).toList();
+        })
         .switchMap(
           (channels) => Stream.fromFuture(_resolveMembersList(channels)),
         )
@@ -105,8 +107,11 @@ class CChatRepository implements ChatRepository {
       (response) {
         final channels = response.docs.where((e) {
           final data = e.data();
-          final isEqual = equality(data['members'], ids);
-          return isEqual;
+          final members = data['members'];
+
+          members.sort();
+          ids.sort();
+          return equality(members, ids);
         }).toList();
 
         if (channels.isEmpty) return null;

@@ -74,7 +74,6 @@ void setUpInjectionContainer() {
       serviceLocator.get(),
       serviceLocator.get(),
       serviceLocator.get(),
-      serviceLocator.get(),
     ),
   );
 

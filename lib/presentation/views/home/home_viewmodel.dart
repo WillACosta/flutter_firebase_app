@@ -11,24 +11,20 @@ class HomeViewModel extends ViewModel {
     this._authRepository,
     this._getContactsUseCase,
     this._getChannelsByUserUseCase,
-    this._getUserUseCase,
     this._userViewModel,
   );
 
   final AuthenticationRepository _authRepository;
   final GetAllContactsUseCase _getContactsUseCase;
   final GetChannelsByUserUseCase _getChannelsByUserUseCase;
-  final GetUserUseCase _getUserUseCase;
   final UserViewModel _userViewModel;
 
   final ValueNotifier<List<UserModel>> contactsState = ValueNotifier([]);
 
-  Stream<UserModel> get currentUser {
-    return _getUserUseCase(_userViewModel.currentUserId);
-  }
+  Stream<UserModel> get currentUser => _userViewModel.currentUserStream;
 
   Stream<List<ChannelModel>> get channels {
-    return _getChannelsByUserUseCase(_userViewModel.currentUserId);
+    return _getChannelsByUserUseCase(_userViewModel.userId);
   }
 
   Future<void> logout() {
@@ -59,7 +55,9 @@ class HomeViewModel extends ViewModel {
 
     if (type == ChannelType.private) {
       final chattingWith = members
-          .where((user) => user.id != _userViewModel.currentUserId)
+          .where(
+            (user) => user.id != _userViewModel.userId,
+          )
           .toList();
       return chattingWith[0].name;
     } else {
@@ -71,7 +69,9 @@ class HomeViewModel extends ViewModel {
     final members = channel.members;
 
     final chattingWith = members
-        .where((user) => user.id != _userViewModel.currentUserId)
+        .where(
+          (user) => user.id != _userViewModel.userId,
+        )
         .toList();
     return chattingWith[0].id;
   }
