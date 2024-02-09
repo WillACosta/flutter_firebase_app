@@ -1,31 +1,24 @@
-import 'dart:convert';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_app/infra/infra.dart';
-import 'package:rxdart/rxdart.dart';
-
-import '../../../../../core/core.dart';
-import '../../models/models.dart';
-import 'auth_repository.dart';
+import 'package:firebase_auth_app/features/authentication/authentication.dart';
+import 'package:firebase_auth_app/features/contacts/contacts.dart';
 
 class CAuthenticationRepository implements AuthenticationRepository {
-  CAuthenticationRepository(
-    this._firebaseAuth,
-    this._secureStorageService,
-  );
+  CAuthenticationRepository(this._firebaseAuth, this._contactsRepository);
 
   final FirebaseAuth _firebaseAuth;
-  final SecureStorageService _secureStorageService;
+  final ContactsRepository _contactsRepository;
 
   @override
   Stream<bool> isAuthenticated() {
-    return Rx.combineLatest2(
-      _firebaseAuth.authStateChanges(),
-      Stream.fromFuture(_secureStorageService.getByKey(StorageKeys.userData)),
-      (userFromFirebase, userFromStorage) {
-        return userFromFirebase != null && userFromStorage != null;
-      },
-    );
+    // return Rx.combineLatest2(
+    //   _firebaseAuth.authStateChanges(),
+    //   Stream.fromFuture(_secureStorageService.getByKey(StorageKeys.userData)),
+    //   (userFromFirebase, userFromStorage) {
+    //     return userFromFirebase != null && userFromStorage != null;
+    //   },
+    // );
+
+    return _firebaseAuth.authStateChanges().map((user) => user != null);
   }
 
   @override
@@ -51,23 +44,9 @@ class CAuthenticationRepository implements AuthenticationRepository {
       password: password,
     );
 
-    final user = credentials.user;
-    final userData = NetWorkUser.fromFirebaseAuth(user);
+    final signedUserId = credentials.user!.uid;
+    final currentUser = await _contactsRepository.getUser(signedUserId);
 
-    await _secureStorageService.save(
-      key: StorageKeys.userData,
-      value: jsonEncode(userData),
-    );
-  }
-
-  @override
-  Future<UserCredential> createUserWithEmailAndPassword({
-    required String emailAddress,
-    required String password,
-  }) {
-    return _firebaseAuth.createUserWithEmailAndPassword(
-      email: emailAddress,
-      password: password,
-    );
+    await _contactsRepository.saveUserToLocalStorage(currentUser);
   }
 }

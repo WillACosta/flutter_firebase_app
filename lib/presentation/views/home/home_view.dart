@@ -25,7 +25,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     vm.init();
-    _setListeners();
     super.initState();
   }
 
@@ -54,12 +53,6 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
     );
-  }
-
-  void _setListeners() {
-    _subscription = vm.currentUser.listen((data) {
-      userName = data.name;
-    });
   }
 
   @override

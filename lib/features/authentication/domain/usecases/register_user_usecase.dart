@@ -5,27 +5,21 @@ import '../../../../core/core.dart';
 import '../../data/data.dart';
 
 class RegisterUserUseCase {
-  final AuthenticationRepository _authRepository;
-  final RegisterRepository _registerRepository;
+  RegisterUserUseCase(this._registerRepository, this._authRepository);
 
-  RegisterUserUseCase(
-    this._authRepository,
-    this._registerRepository,
-  );
+  final RegisterRepository _registerRepository;
+  final AuthenticationRepository _authRepository;
 
   Future<Result<Unit, AppFailure>> call(RegisterUserParams params) async {
     try {
-      final credentials = await _authRepository.createUserWithEmailAndPassword(
-        emailAddress: params.email,
+      final user = await _registerRepository.createUserWithEmailAndPassword(
+        name: params.name,
+        email: params.email,
         password: params.password,
       );
 
-      final user = credentials.user;
-
       Future.wait([
-        _registerRepository.registerUserToTheStorage(
-          NetWorkUser.fromFirebaseAuth(user),
-        ),
+        _registerRepository.saveUserToStorage(user),
         _authRepository.signInWithEmailAndPassword(
           emailAddress: params.email,
           password: params.password,
@@ -40,10 +34,12 @@ class RegisterUserUseCase {
 }
 
 class RegisterUserParams {
+  final String name;
   final String email;
   final String password;
 
   RegisterUserParams({
+    required this.name,
     required this.email,
     required this.password,
   });

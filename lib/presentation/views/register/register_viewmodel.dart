@@ -6,9 +6,11 @@ class RegisterViewModel extends ViewModel {
   RegisterViewModel(this._useCase);
   final RegisterUserUseCase _useCase;
 
-  String? email = 'william.costa@gmail.com';
-  String? password = '123456';
+  String? name;
+  String? email;
+  String? password;
 
+  void setName(String? value) => name = value;
   void setEmail(String? value) => email = value;
   void setPassword(String? value) => password = value;
 
@@ -21,6 +23,7 @@ class RegisterViewModel extends ViewModel {
 
     final result = await _useCase(
       RegisterUserParams(
+        name: name ?? 'INVALID DATA',
         email: email ?? 'INVALID DATA',
         password: password ?? 'INVALID DATA',
       ),

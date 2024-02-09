@@ -9,11 +9,6 @@ abstract class AuthenticationRepository {
     required String password,
   });
 
-  Future<UserCredential> createUserWithEmailAndPassword({
-    required String emailAddress,
-    required String password,
-  });
-
   Future<void> signOut();
 
   User? get userSnapshot;

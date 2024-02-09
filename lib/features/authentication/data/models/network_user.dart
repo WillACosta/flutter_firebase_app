@@ -33,12 +33,15 @@ class NetWorkUser {
     return NetWorkUser.fromMap(data);
   }
 
-  static Map<String, dynamic> fromFirebaseAuth(User? user) {
-    return {
-      'uid': user?.uid ?? const Uuid().v4(),
-      'displayName': user?.displayName ?? 'Unknown',
-      'email': user?.email ?? 'No email address',
-    };
+  static NetWorkUser fromFirebaseAuth(
+    User? user, {
+    String userName = 'User',
+  }) {
+    return NetWorkUser(
+      uid: user?.uid ?? const Uuid().v4(),
+      name: user?.displayName ?? userName,
+      email: user?.email ?? 'No email address available',
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -47,5 +50,17 @@ class NetWorkUser {
       'name': name,
       'email': email,
     };
+  }
+
+  NetWorkUser copyWith({
+    String? uid,
+    String? name,
+    String? email,
+  }) {
+    return NetWorkUser(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      email: email ?? this.email,
+    );
   }
 }

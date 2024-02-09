@@ -59,7 +59,16 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(height: 40),
               TextFormField(
                 initialValue: vm.email,
-                onSaved: (value) => vm.setEmail(value),
+                onSaved: vm.setName,
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                decoration: const InputDecoration(
+                  labelText: 'name',
+                ),
+              ),
+              TextFormField(
+                initialValue: vm.email,
+                onSaved: vm.setEmail,
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.next,
                 decoration: const InputDecoration(
@@ -69,7 +78,7 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(height: 23),
               TextFormField(
                 initialValue: vm.password,
-                onSaved: (value) => vm.setPassword(value),
+                onSaved: vm.setPassword,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(

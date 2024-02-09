@@ -6,7 +6,8 @@ class GetUserUseCase {
   GetUserUseCase(this._contactsRepository);
   final ContactsRepository _contactsRepository;
 
-  Stream<UserModel> call(String id) {
-    return _contactsRepository.getUser(id).map(UserMapper.toDomain);
+  Future<UserModel> call(String id) async {
+    final data = await _contactsRepository.getUser(id);
+    return UserMapper.toDomain(data);
   }
 }
