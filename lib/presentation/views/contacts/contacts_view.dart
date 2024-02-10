@@ -9,11 +9,11 @@ class ContactsView extends StatelessWidget {
   });
 
   final List<UserModel> users;
-  final void Function(String)? onSelectedContact;
+  final void Function(UserModel)? onSelectedContact;
 
-  void _handleSelectedContact(String uid) {
+  void _handleSelectedContact(UserModel user) {
     if (onSelectedContact == null) return;
-    onSelectedContact?.call(uid);
+    onSelectedContact?.call(user);
   }
 
   @override
@@ -38,7 +38,7 @@ class ContactsView extends StatelessWidget {
                 final user = users[index];
 
                 return ListTile(
-                  onTap: () => _handleSelectedContact(user.id),
+                  onTap: () => _handleSelectedContact(user),
                   title: Text(user.name),
                   subtitle: Text(
                     user.email,

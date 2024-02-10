@@ -1,8 +1,10 @@
 import 'dart:async';
 
 import 'package:firebase_auth_app/core/core.dart';
+import 'package:firebase_auth_app/features/chat/chat.dart';
 import 'package:flutter/material.dart';
 
+import '../../../features/authentication/domain/domain.dart';
 import '../chat/chat.dart';
 import '../contacts/components/components.dart';
 import '../contacts/contacts_view.dart';
@@ -34,11 +36,17 @@ class _HomeViewState extends State<HomeView> {
     super.dispose();
   }
 
-  void _navigateToChatScreen(String userId) {
+  void _openChannelFor({
+    required List<UserModel> members,
+    ChannelType type = ChannelType.private,
+  }) {
     Navigator.pushNamed(
       context,
       '/chat-conversation',
-      arguments: ChatConversationArgs(chattingWithId: userId),
+      arguments: ChatConversationArgs(
+        membersOfTheChannel: members,
+        channelType: type,
+      ),
     );
   }
 
@@ -49,7 +57,7 @@ class _HomeViewState extends State<HomeView> {
         valueListenable: vm.contactsState,
         builder: (_, contacts, __) => ContactsView(
           users: contacts,
-          onSelectedContact: (uid) => _navigateToChatScreen(uid),
+          onSelectedContact: (user) => _openChannelFor(members: [user]),
         ),
       ),
     );
@@ -83,12 +91,13 @@ class _HomeViewState extends State<HomeView> {
                 final currentChannel = channels[index];
 
                 final channelDescription = currentChannel.createdDate ?? '-';
-                final chattingWithId = vm.resolveChattingWith(currentChannel);
-                final channelTitle = vm.resolveChannelName(currentChannel);
+                final (channelName, members) = vm.resolveChannelNameAndUserList(
+                  currentChannel,
+                );
 
                 return ContactItem(
-                  onTap: () => _navigateToChatScreen(chattingWithId),
-                  title: channelTitle,
+                  onTap: () => _openChannelFor(members: members),
+                  title: channelName,
                   description: channelDescription,
                 );
               },

@@ -1,12 +1,19 @@
 import 'package:firebase_auth_app/core/di/injection_container.dart';
+import 'package:firebase_auth_app/features/chat/chat.dart';
 import 'package:firebase_auth_app/presentation/views/chat/chat.dart';
 import 'package:flutter/material.dart';
 
+import '../../../features/authentication/authentication.dart';
 import 'components/components.dart';
 
 class ChatConversationArgs {
-  final String chattingWithId;
-  ChatConversationArgs({required this.chattingWithId});
+  final List<UserModel> membersOfTheChannel;
+  final ChannelType channelType;
+
+  ChatConversationArgs({
+    this.channelType = ChannelType.private,
+    required this.membersOfTheChannel,
+  });
 }
 
 class ChatConversionView extends StatefulWidget {
@@ -21,7 +28,12 @@ class _ChatConversionViewState extends State<ChatConversionView> {
   final textController = TextEditingController();
   final vm = serviceLocator.get<ChatViewModel>();
 
-  String get chattingWithId => widget.args.chattingWithId;
+  ChannelType get currentChannelType => widget.args.channelType;
+  List<UserModel> get membersOfTheChannel => widget.args.membersOfTheChannel;
+
+  /// TODO: temporary
+  /// Move this logic to the ViewModel
+  UserModel get currentUser => widget.args.membersOfTheChannel.first;
 
   void onSendMessage() {
     if (textController.text.isEmpty) return;
@@ -37,7 +49,7 @@ class _ChatConversionViewState extends State<ChatConversionView> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Sêneca'),
+            Text(currentUser.name),
             Text(
               'last seen 19:32',
               style: TextStyle(
@@ -55,7 +67,10 @@ class _ChatConversionViewState extends State<ChatConversionView> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             StreamBuilder(
-              stream: vm.messagesByChannel(chattingWithId),
+              stream: vm.messagesByChannel(
+                currentChannelType,
+                members: membersOfTheChannel,
+              ),
               builder: (_, snapshot) {
                 if (snapshot.hasData) {
                   final messages = snapshot.data!;
@@ -65,7 +80,10 @@ class _ChatConversionViewState extends State<ChatConversionView> {
                       itemBuilder: (_, index) {
                         final currentMessage = messages[index];
                         return MessageBubble(
-                          isReceived: currentMessage.sentBy == chattingWithId,
+                          /// TODO: change this for using isCurrentUser
+                          /// it'll be easier if we use the current user when
+                          /// this is a GROUP of many people
+                          isReceived: currentMessage.sentBy == currentUser.id,
                           message: currentMessage.messageText,
                         );
                       },
@@ -87,9 +105,7 @@ class _ChatConversionViewState extends State<ChatConversionView> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 40,
-            ),
+            const SizedBox(height: 40),
           ],
         ),
       ),

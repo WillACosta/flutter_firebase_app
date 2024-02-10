@@ -20,18 +20,31 @@ class ChatViewModel extends ViewModel {
   String _currentChannelId = '';
   String get currentUserId => _authRepository.userSnapshot!.uid;
 
-  Stream<List<MessageModel>> messagesByChannel(String chattingWithId) {
-    return _createPrivateChatUseCase(
-      CreatePrivateChatParams(
-        currentUserId: currentUserId,
-        chattingWithId: chattingWithId,
-      ),
-    ).switchMap(
-      (channelId) {
-        _currentChannelId = channelId;
-        return _getMessagesByChannelUseCase(channelId);
-      },
-    );
+  Stream<List<MessageModel>> messagesByChannel(
+    ChannelType type, {
+    required List<UserModel> members,
+  }) {
+    /// TODO:
+    /// move the logic for decide whether channel is PRIVATE or GROUP
+    /// for the domain layer, such as use case like:
+    /// CreateChannelUseCase(type, members)
+
+    if (type == ChannelType.private) {
+      return _createPrivateChatUseCase(
+        CreatePrivateChatParams(
+          currentUserId: currentUserId,
+          chattingWithId: members.first.id,
+        ),
+      ).switchMap(
+        (channelId) {
+          _currentChannelId = channelId;
+          return _getMessagesByChannelUseCase(channelId);
+        },
+      );
+    }
+
+    /// TODO: add later call for create a new GROUP or using existent
+    return Stream.value([]);
   }
 
   Future<void> sendMessage(String message) async {

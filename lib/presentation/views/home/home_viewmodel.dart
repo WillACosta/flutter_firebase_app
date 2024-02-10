@@ -46,25 +46,23 @@ class HomeViewModel extends ViewModel {
     );
   }
 
-  String resolveChannelName(ChannelModel channel) {
+  (String, List<UserModel>) resolveChannelNameAndUserList(
+    ChannelModel channel,
+  ) {
     final type = channel.type;
     final members = channel.members;
     final channelName = channel.description;
 
     if (type == ChannelType.private) {
-      final chattingWith =
-          members.where((user) => user.id != currentUserId).toList();
-      return chattingWith[0].name;
-    } else {
-      return channelName!;
+      final foundChattingWith = members
+          .where(
+            (user) => user.id != currentUserId,
+          )
+          .toList();
+
+      return (foundChattingWith.first.name, foundChattingWith);
     }
-  }
 
-  String resolveChattingWith(ChannelModel channel) {
-    final members = channel.members;
-
-    final chattingWith =
-        members.where((user) => user.id != currentUserId).toList();
-    return chattingWith[0].id;
+    return (channelName!, members);
   }
 }
