@@ -62,7 +62,6 @@ void setUpInjectionContainer() {
   serviceLocator.registerSingleton(SplashViewModel(serviceLocator.get()));
   serviceLocator.registerFactory(() => SigInViewModel(serviceLocator.get()));
   serviceLocator.registerFactory(() => RegisterViewModel(serviceLocator.get()));
-
   serviceLocator.registerFactory(
     () => HomeViewModel(
       serviceLocator.get(),

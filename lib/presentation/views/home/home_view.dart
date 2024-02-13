@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:firebase_auth_app/core/core.dart';
-import 'package:firebase_auth_app/features/chat/chat.dart';
+import 'package:firebase_auth_app/presentation/params/params.dart';
 import 'package:flutter/material.dart';
 
-import '../../../features/authentication/domain/domain.dart';
 import '../chat/chat.dart';
 import '../contacts/components/components.dart';
 import '../contacts/contacts_view.dart';
@@ -26,7 +25,7 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   void initState() {
-    vm.init();
+    vm.fetchAllContacts();
     super.initState();
   }
 
@@ -36,29 +35,20 @@ class _HomeViewState extends State<HomeView> {
     super.dispose();
   }
 
-  void _openChannelFor({
-    required List<UserModel> members,
-    ChannelType type = ChannelType.private,
-  }) {
+  void _openChannelFor(ChannelParams params) {
     Navigator.pushNamed(
       context,
       '/chat-conversation',
-      arguments: ChatConversationArgs(
-        membersOfTheChannel: members,
-        channelType: type,
-      ),
+      arguments: ChatConversationArgs(params),
     );
   }
 
   void _showContactsBottomSheet() {
     showModalBottomSheet(
       context: context,
-      builder: (_) => ValueListenableBuilder(
-        valueListenable: vm.contactsState,
-        builder: (_, contacts, __) => ContactsView(
-          users: contacts,
-          onSelectedContact: (user) => _openChannelFor(members: [user]),
-        ),
+      builder: (_) => ContactsView(
+        contacts: vm.contactsState,
+        onStartNewChat: _openChannelFor,
       ),
     );
   }
@@ -96,7 +86,7 @@ class _HomeViewState extends State<HomeView> {
                 );
 
                 return ContactItem(
-                  onTap: () => _openChannelFor(members: members),
+                  onTap: () => _openChannelFor(ChannelParams(members: members)),
                   title: channelName,
                   description: channelDescription,
                 );

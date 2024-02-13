@@ -1,25 +1,34 @@
 import 'package:firebase_auth_app/core/core.dart';
 import 'package:firebase_auth_app/features/chat/domain/domain.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../features/authentication/authentication.dart';
 import '../../../features/contacts/contacts.dart';
 
 class HomeViewModel extends ViewModel {
+  final AuthenticationRepository _authRepository;
+  final GetChannelsByUserUseCase _getChannelsByUserUseCase;
+  final GetAllContactsUseCase _getAllContacts;
+
   HomeViewModel(
     this._authRepository,
-    this._getContactsUseCase,
     this._getChannelsByUserUseCase,
+    this._getAllContacts,
   );
 
-  final AuthenticationRepository _authRepository;
-  final GetAllContactsUseCase _getContactsUseCase;
-  final GetChannelsByUserUseCase _getChannelsByUserUseCase;
-  final ValueNotifier<List<UserModel>> contactsState = ValueNotifier([]);
+  final ValueNotifier _contactsState = ValueNotifier<List<UserModel>>([]);
 
-  /// TODO: criar um novo Stream para obter o ID do usuário via
-  /// firestore, criar um novo método no Rep. Contacts
   String get currentUserId => _authRepository.userSnapshot!.uid;
+  List<UserModel> get contactsState => _contactsState.value;
+
+  Future<void> fetchAllContacts() async {
+    final result = await _getAllContacts();
+
+    result.fold(
+      (contacts) => _contactsState.value = contacts,
+      (failure) => setState(UiState.error),
+    );
+  }
 
   Stream<List<ChannelModel>> get channels {
     return _getChannelsByUserUseCase(currentUserId);
@@ -27,23 +36,6 @@ class HomeViewModel extends ViewModel {
 
   Future<void> logout() {
     return _authRepository.signOut();
-  }
-
-  Future<void> init() async {
-    setState(UiState.loading);
-    await _getContacts();
-  }
-
-  Future<void> _getContacts() async {
-    final result = await _getContactsUseCase();
-
-    result.fold(
-      (contacts) {
-        contactsState.value = contacts;
-        setState(UiState.success);
-      },
-      (failure) => setState(UiState.error),
-    );
   }
 
   (String, List<UserModel>) resolveChannelNameAndUserList(

@@ -15,6 +15,7 @@ class ChannelModel {
   final String id;
   final ChannelType type;
   final List<UserModel> members;
+  final String? name;
   final String? description;
   final String? image;
   final String? createdDate;
@@ -24,6 +25,7 @@ class ChannelModel {
     required this.id,
     required this.type,
     required this.members,
+    this.name,
     this.description,
     this.image,
     this.createdDate,

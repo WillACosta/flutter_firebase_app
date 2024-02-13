@@ -1,5 +1,6 @@
 import 'package:firebase_auth_app/core/di/injection_container.dart';
 import 'package:firebase_auth_app/features/chat/chat.dart';
+import 'package:firebase_auth_app/presentation/params/params.dart';
 import 'package:firebase_auth_app/presentation/views/chat/chat.dart';
 import 'package:flutter/material.dart';
 
@@ -7,13 +8,8 @@ import '../../../features/authentication/authentication.dart';
 import 'components/components.dart';
 
 class ChatConversationArgs {
-  final List<UserModel> membersOfTheChannel;
-  final ChannelType channelType;
-
-  ChatConversationArgs({
-    this.channelType = ChannelType.private,
-    required this.membersOfTheChannel,
-  });
+  final ChannelParams channelParams;
+  ChatConversationArgs(this.channelParams);
 }
 
 class ChatConversionView extends StatefulWidget {
@@ -28,12 +24,12 @@ class _ChatConversionViewState extends State<ChatConversionView> {
   final textController = TextEditingController();
   final vm = serviceLocator.get<ChatViewModel>();
 
-  ChannelType get currentChannelType => widget.args.channelType;
-  List<UserModel> get membersOfTheChannel => widget.args.membersOfTheChannel;
+  ChannelType get currentChannelType => widget.args.channelParams.type;
+  List<UserModel> get membersOfTheChannel => widget.args.channelParams.members;
 
   /// TODO: temporary
   /// Move this logic to the ViewModel
-  UserModel get currentUser => widget.args.membersOfTheChannel.first;
+  UserModel get currentUser => widget.args.channelParams.members.first;
 
   void onSendMessage() {
     if (textController.text.isEmpty) return;

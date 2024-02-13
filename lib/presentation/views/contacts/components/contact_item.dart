@@ -27,7 +27,12 @@ class ContactItem extends StatelessWidget {
         ),
       ),
       title: Text(title),
-      subtitle: Text(description),
+      subtitle: Text(
+        description,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.outline,
+        ),
+      ),
     );
   }
 }
