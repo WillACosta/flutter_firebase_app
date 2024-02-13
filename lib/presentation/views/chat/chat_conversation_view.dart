@@ -3,12 +3,16 @@ import 'package:firebase_auth_app/presentation/params/params.dart';
 import 'package:firebase_auth_app/presentation/views/chat/chat.dart';
 import 'package:flutter/material.dart';
 
-import '../../../features/authentication/authentication.dart';
 import 'components/components.dart';
 
 class ChatConversationArgs {
-  final ChannelParams channelParams;
-  ChatConversationArgs(this.channelParams);
+  final String? currentChannelId;
+  final ChannelParams? channelParams;
+
+  ChatConversationArgs({
+    required this.currentChannelId,
+    required this.channelParams,
+  });
 }
 
 class ChatConversionView extends StatefulWidget {
@@ -22,10 +26,6 @@ class ChatConversionView extends StatefulWidget {
 class _ChatConversionViewState extends State<ChatConversionView> {
   final textController = TextEditingController();
   final vm = serviceLocator.get<ChatViewModel>();
-
-  /// TODO: temporary
-  /// Move this logic to the ViewModel
-  UserModel get currentUser => widget.args.channelParams.members.first;
 
   void onSendMessage() {
     if (textController.text.isEmpty) return;
@@ -41,7 +41,7 @@ class _ChatConversionViewState extends State<ChatConversionView> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(currentUser.name),
+            const Text('Chat Name'),
             Text(
               'last seen 19:32',
               style: TextStyle(
@@ -59,7 +59,10 @@ class _ChatConversionViewState extends State<ChatConversionView> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             StreamBuilder(
-              stream: vm.messagesByChannel(widget.args.channelParams),
+              stream: vm.messagesByChannel(
+                widget.args.currentChannelId,
+                widget.args.channelParams,
+              ),
               builder: (_, snapshot) {
                 if (snapshot.hasData) {
                   final messages = snapshot.data!;
@@ -69,10 +72,8 @@ class _ChatConversionViewState extends State<ChatConversionView> {
                       itemBuilder: (_, index) {
                         final currentMessage = messages[index];
                         return MessageBubble(
-                          /// TODO: change this for using isCurrentUser
-                          /// it'll be easier if we use the current user when
-                          /// this is a GROUP of many people
-                          isReceived: currentMessage.sentBy == currentUser.id,
+                          isCurrentUser:
+                              currentMessage.sentBy == vm.currentUserId,
                           message: currentMessage.messageText,
                         );
                       },

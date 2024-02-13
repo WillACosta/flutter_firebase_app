@@ -18,18 +18,21 @@ class CreateOrListenToMessagesByChannelUseCase {
   Stream<List<MessageModel>> call(CreateChannelParams params) {
     final members = params.members;
 
+    if (params.currentChannelId != null) {
+      return _getMessagesByChannelId(params.currentChannelId!);
+    }
+
     if (params.type == ChannelType.private) {
       return _createPrivateChatUseCase(
         CreatePrivateChatParams(
           currentUserId: params.currentUserId,
-          chattingWithId: members.first.id,
+          chattingWithId: members!.first.id,
         ),
       ).switchMap(_getMessagesByChannelId);
     }
 
-    return _createGroupChannelUseCase(
-      params.copyWith(type: ChannelType.group),
-    ).switchMap(_getMessagesByChannelId);
+    return _createGroupChannelUseCase(params)
+        .switchMap(_getMessagesByChannelId);
   }
 
   Stream<List<MessageModel>> _getMessagesByChannelId(String id) {
@@ -41,8 +44,9 @@ class CreateOrListenToMessagesByChannelUseCase {
 
 class CreateChannelParams {
   final String currentUserId;
-  final ChannelType type;
-  final List<UserModel> members;
+  final String? currentChannelId;
+  final ChannelType? type;
+  final List<UserModel>? members;
   final String? name;
   final String? description;
   final String? image;
@@ -51,6 +55,7 @@ class CreateChannelParams {
     required this.currentUserId,
     required this.members,
     this.type = ChannelType.private,
+    this.currentChannelId,
     this.name,
     this.description,
     this.image,

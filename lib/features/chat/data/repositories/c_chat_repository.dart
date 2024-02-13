@@ -113,6 +113,7 @@ class CChatRepository implements ChatRepository {
 
           members.sort();
           ids.sort();
+
           return equality(members, ids);
         }).toList();
 

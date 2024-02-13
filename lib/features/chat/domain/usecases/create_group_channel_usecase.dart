@@ -5,7 +5,7 @@ class CreateGroupChannelUseCase {
   CreateGroupChannelUseCase(this._chatRepository);
 
   Stream<String> call(CreateChannelParams params) {
-    final membersId = params.members.map((e) => e.id).toList();
+    final membersId = params.members!.map((e) => e.id).toList();
 
     return _chatRepository.createChannel(
       type: ChannelType.group.name,

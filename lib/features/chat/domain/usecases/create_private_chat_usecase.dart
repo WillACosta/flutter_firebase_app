@@ -36,3 +36,8 @@ class CreatePrivateChatParams {
     required this.chattingWithId,
   });
 }
+
+/// private: [LkXH8SjzdTd38SqZW4PDW3TnjqS2, aLcQeG1hzvS6GRLmr7vSbioyzCh2]
+/// group: [LkXH8SjzdTd38SqZW4PDW3TnjqS2, aLcQeG1hzvS6GRLmr7vSbioyzCh2]
+///
+///

@@ -38,23 +38,22 @@ class HomeViewModel extends ViewModel {
     return _authRepository.signOut();
   }
 
-  (String, List<UserModel>) resolveChannelNameAndUserList(
+  /// TODO: move this to an Usecase for reuse
+  String resolveChannelName(
     ChannelModel channel,
   ) {
     final type = channel.type;
     final members = channel.members;
-    final channelName = channel.description;
+    final channelName = channel.name;
 
     if (type == ChannelType.private) {
-      final foundChattingWith = members
-          .where(
-            (user) => user.id != currentUserId,
-          )
-          .toList();
+      final foundChattingWith = members.where((user) {
+        return user.id != currentUserId && channel.type == ChannelType.private;
+      }).toList();
 
-      return (foundChattingWith.first.name, foundChattingWith);
+      return foundChattingWith.first.name;
     }
 
-    return (channelName!, members);
+    return channelName!;
   }
 }

@@ -6,33 +6,33 @@ import 'triangle_painter.dart';
 
 class MessageBubble extends StatelessWidget {
   final String message;
-  final bool isReceived;
+  final bool isCurrentUser;
 
   const MessageBubble({
     super.key,
     required this.message,
-    this.isReceived = false,
+    this.isCurrentUser = true,
   });
 
   MainAxisAlignment get mainAxisAlignment =>
-      isReceived ? MainAxisAlignment.start : MainAxisAlignment.end;
+      isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start;
 
-  BorderRadius get borderRadius => isReceived
+  BorderRadius get borderRadius => isCurrentUser
       ? const BorderRadius.only(
-          topRight: Radius.circular(18),
+          topLeft: Radius.circular(18),
           bottomLeft: Radius.circular(18),
           bottomRight: Radius.circular(18),
         )
       : const BorderRadius.only(
-          topLeft: Radius.circular(18),
+          topRight: Radius.circular(18),
           bottomLeft: Radius.circular(18),
           bottomRight: Radius.circular(18),
         );
 
   Color get backgroundColor =>
-      isReceived ? Colors.grey.shade300 : Colors.grey.shade900;
+      isCurrentUser ? Colors.grey.shade900 : Colors.grey.shade300;
 
-  Color get colorColor => isReceived ? Colors.black : Colors.white;
+  Color get colorColor => isCurrentUser ? Colors.white : Colors.black;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class MessageBubble extends StatelessWidget {
         mainAxisAlignment: mainAxisAlignment,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (isReceived)
+          if (!isCurrentUser)
             Transform(
               alignment: Alignment.center,
               transform: Matrix4.rotationY(math.pi),
@@ -67,7 +67,7 @@ class MessageBubble extends StatelessWidget {
               ),
             ),
           ),
-          if (isReceived == false)
+          if (isCurrentUser)
             CustomPaint(
               painter: Triangle(
                 backgroundColor: Colors.grey.shade900,
@@ -79,8 +79,8 @@ class MessageBubble extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.only(
-        right: isReceived ? 50 : 18,
-        left: isReceived ? 18 : 50,
+        right: isCurrentUser ? 18 : 50,
+        left: isCurrentUser ? 50 : 18,
         top: 5,
         bottom: 5,
       ),

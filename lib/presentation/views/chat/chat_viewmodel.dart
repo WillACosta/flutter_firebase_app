@@ -18,15 +18,19 @@ class ChatViewModel extends ViewModel {
   final String _currentChannelId = '';
   String get currentUserId => _authRepository.userSnapshot!.uid;
 
-  Stream<List<MessageModel>> messagesByChannel(ChannelParams params) {
+  Stream<List<MessageModel>> messagesByChannel(
+    String? channelId,
+    ChannelParams? params,
+  ) {
     return _createChannelUseCase(
       CreateChannelParams(
         currentUserId: currentUserId,
-        members: params.members,
-        type: params.type,
-        name: params.name,
-        description: params.description,
-        image: params.image,
+        members: params?.members,
+        type: params?.type,
+        currentChannelId: channelId,
+        name: params?.name,
+        description: params?.description,
+        image: params?.image,
       ),
     );
   }

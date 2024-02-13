@@ -23,7 +23,7 @@ class NetworkChannel {
 
   factory NetworkChannel.fromMap(Map<String, dynamic> map) {
     return NetworkChannel(
-      id: map['uid'] ?? "0",
+      id: map['id'],
       type: map['type'],
       members: List.from(map['members'].map(NetWorkUser.fromMap)),
       name: map['name'],

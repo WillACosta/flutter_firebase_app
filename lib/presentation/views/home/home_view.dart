@@ -35,11 +35,17 @@ class _HomeViewState extends State<HomeView> {
     super.dispose();
   }
 
-  void _openChannelFor(ChannelParams params) {
+  void _openChannelFor({
+    String? channelId,
+    ChannelParams? params,
+  }) {
     Navigator.pushNamed(
       context,
       '/chat-conversation',
-      arguments: ChatConversationArgs(params),
+      arguments: ChatConversationArgs(
+        currentChannelId: channelId,
+        channelParams: params,
+      ),
     );
   }
 
@@ -48,7 +54,7 @@ class _HomeViewState extends State<HomeView> {
       context: context,
       builder: (_) => ContactsView(
         contacts: vm.contactsState,
-        onStartNewChat: _openChannelFor,
+        onStartNewChat: (params) => _openChannelFor(params: params),
       ),
     );
   }
@@ -79,14 +85,11 @@ class _HomeViewState extends State<HomeView> {
               itemCount: channels.length,
               itemBuilder: (_, index) {
                 final currentChannel = channels[index];
-
                 final channelDescription = currentChannel.createdDate ?? '-';
-                final (channelName, members) = vm.resolveChannelNameAndUserList(
-                  currentChannel,
-                );
+                final channelName = vm.resolveChannelName(currentChannel);
 
                 return ContactItem(
-                  onTap: () => _openChannelFor(ChannelParams(members: members)),
+                  onTap: () => _openChannelFor(channelId: currentChannel.id),
                   title: channelName,
                   description: channelDescription,
                 );
