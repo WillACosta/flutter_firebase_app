@@ -4,6 +4,7 @@ class NetworkChannel {
   final String id;
   final String type;
   final List<NetWorkUser> members;
+  final String? name;
   final String? description;
   final String? image;
   final String? createdAt;
@@ -13,6 +14,7 @@ class NetworkChannel {
     required this.id,
     required this.type,
     required this.members,
+    this.name,
     this.description,
     this.image,
     this.createdAt,
@@ -24,6 +26,7 @@ class NetworkChannel {
       id: map['uid'] ?? "0",
       type: map['type'],
       members: List.from(map['members'].map(NetWorkUser.fromMap)),
+      name: map['name'],
       description: map['description'],
       image: map['image'],
       createdAt: map['createdAt'],

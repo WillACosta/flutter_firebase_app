@@ -17,6 +17,7 @@ class CChatRepository implements ChatRepository {
     required String createdByUid,
     required List<String> members,
     required String type,
+    String? name,
     String? description,
     String? image,
     String? modifiedAt,
@@ -25,6 +26,7 @@ class CChatRepository implements ChatRepository {
       'createdBy': createdByUid,
       'type': type,
       'createdAt': DateTime.now().toIso8601String(),
+      'name': name,
       'description': description,
       'image': image,
       'members': members

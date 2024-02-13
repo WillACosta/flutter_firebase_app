@@ -20,6 +20,7 @@ abstract class ChatDataMapper {
       createdBy: data.createdBy,
       type: ChannelType.fromString(data.type),
       createdDate: DateTime.parse(data.createdAt!).toString(),
+      name: data.name,
       description: data.description,
       image: data.image,
     );

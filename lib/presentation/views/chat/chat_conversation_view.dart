@@ -1,5 +1,4 @@
 import 'package:firebase_auth_app/core/di/injection_container.dart';
-import 'package:firebase_auth_app/features/chat/chat.dart';
 import 'package:firebase_auth_app/presentation/params/params.dart';
 import 'package:firebase_auth_app/presentation/views/chat/chat.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +22,6 @@ class ChatConversionView extends StatefulWidget {
 class _ChatConversionViewState extends State<ChatConversionView> {
   final textController = TextEditingController();
   final vm = serviceLocator.get<ChatViewModel>();
-
-  ChannelType get currentChannelType => widget.args.channelParams.type;
-  List<UserModel> get membersOfTheChannel => widget.args.channelParams.members;
 
   /// TODO: temporary
   /// Move this logic to the ViewModel
@@ -63,10 +59,7 @@ class _ChatConversionViewState extends State<ChatConversionView> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             StreamBuilder(
-              stream: vm.messagesByChannel(
-                currentChannelType,
-                members: membersOfTheChannel,
-              ),
+              stream: vm.messagesByChannel(widget.args.channelParams),
               builder: (_, snapshot) {
                 if (snapshot.hasData) {
                   final messages = snapshot.data!;

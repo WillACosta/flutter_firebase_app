@@ -46,9 +46,6 @@ void setUpInjectionContainer() {
     () => RegisterUserUseCase(serviceLocator.get(), serviceLocator.get()),
   );
   serviceLocator.registerFactory(
-    () => GetMessagesByChannelUseCase(serviceLocator.get()),
-  );
-  serviceLocator.registerFactory(
     () => SendMessageUseCase(serviceLocator.get()),
   );
   serviceLocator.registerFactory(
@@ -56,6 +53,16 @@ void setUpInjectionContainer() {
   );
   serviceLocator.registerFactory(
     () => GetUserUseCase(serviceLocator.get()),
+  );
+  serviceLocator.registerFactory(
+    () => CreateGroupChannelUseCase(serviceLocator.get()),
+  );
+  serviceLocator.registerFactory(
+    () => CreateOrListenToMessagesByChannelUseCase(
+      serviceLocator.get(),
+      serviceLocator.get(),
+      serviceLocator.get(),
+    ),
   );
 
   // view models
@@ -72,7 +79,6 @@ void setUpInjectionContainer() {
 
   serviceLocator.registerFactory(
     () => ChatViewModel(
-      serviceLocator.get(),
       serviceLocator.get(),
       serviceLocator.get(),
       serviceLocator.get(),

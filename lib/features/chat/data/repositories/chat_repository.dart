@@ -16,6 +16,7 @@ abstract class ChatRepository {
     required String createdByUid,
     required List<String> members,
     required String type,
+    String? name,
     String? description,
     String? image,
     String? modifiedAt,
