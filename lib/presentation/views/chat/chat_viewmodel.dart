@@ -1,8 +1,8 @@
 import 'package:firebase_auth_app/features/chat/domain/domain.dart';
-import 'package:firebase_auth_app/presentation/params/params.dart';
 
 import '../../../core/core.dart';
 import '../../../features/authentication/authentication.dart';
+import '../../params/params.dart';
 
 class ChatViewModel extends ViewModel {
   ChatViewModel(
@@ -15,30 +15,31 @@ class ChatViewModel extends ViewModel {
   final SendMessageUseCase _sendMessageUseCase;
   final AuthenticationRepository _authRepository;
 
-  final String _currentChannelId = '';
+  String currentChannelId = '';
   String get currentUserId => _authRepository.userSnapshot!.uid;
 
   Stream<List<MessageModel>> messagesByChannel(
-    String? channelId,
-    ChannelParams? params,
+    String? existingChannelId,
+    ChannelUiParams? params,
   ) {
     return _createChannelUseCase(
       CreateChannelParams(
         currentUserId: currentUserId,
         members: params?.members,
         type: params?.type,
-        currentChannelId: channelId,
+        currentChannelId: existingChannelId,
         name: params?.name,
         description: params?.description,
         image: params?.image,
       ),
+      (id) => currentChannelId = id,
     );
   }
 
   Future<void> sendMessage(String message) async {
     await _sendMessageUseCase(
       SendMessageParams(
-        channelId: _currentChannelId,
+        channelId: currentChannelId,
         messageFrom: currentUserId,
         message: message,
       ),

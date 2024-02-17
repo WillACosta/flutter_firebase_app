@@ -1,17 +1,18 @@
 import 'package:firebase_auth_app/core/di/injection_container.dart';
-import 'package:firebase_auth_app/presentation/params/params.dart';
 import 'package:firebase_auth_app/presentation/views/chat/chat.dart';
 import 'package:flutter/material.dart';
 
+import '../../params/params.dart';
+import '../../utils/utils.dart';
 import 'components/components.dart';
 
 class ChatConversationArgs {
-  final String? currentChannelId;
-  final ChannelParams? channelParams;
+  final String? existingChannelId;
+  final ChannelUiParams params;
 
   ChatConversationArgs({
-    required this.currentChannelId,
-    required this.channelParams,
+    this.existingChannelId,
+    required this.params,
   });
 }
 
@@ -27,6 +28,17 @@ class _ChatConversionViewState extends State<ChatConversionView> {
   final textController = TextEditingController();
   final vm = serviceLocator.get<ChatViewModel>();
 
+  ChannelUiParams get channelParams => widget.args.params;
+
+  String get channelName => resolveChannelName(
+        currentUserId: vm.currentUserId,
+        type: channelParams.type,
+        users: channelParams.members,
+        groupName: channelParams.name,
+      );
+
+  String get channelDescription => 'last seen 19:33';
+
   void onSendMessage() {
     if (textController.text.isEmpty) return;
     vm.sendMessage(textController.text);
@@ -41,9 +53,9 @@ class _ChatConversionViewState extends State<ChatConversionView> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Chat Name'),
+            Text(channelName),
             Text(
-              'last seen 19:32',
+              channelDescription,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.outline,
                 fontSize: 14,
@@ -60,8 +72,8 @@ class _ChatConversionViewState extends State<ChatConversionView> {
           children: [
             StreamBuilder(
               stream: vm.messagesByChannel(
-                widget.args.currentChannelId,
-                widget.args.channelParams,
+                widget.args.existingChannelId,
+                channelParams,
               ),
               builder: (_, snapshot) {
                 if (snapshot.hasData) {

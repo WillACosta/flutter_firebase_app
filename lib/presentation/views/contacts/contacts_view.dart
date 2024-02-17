@@ -14,7 +14,7 @@ class ContactsView extends StatefulWidget {
   });
 
   final List<UserModel> contacts;
-  final void Function(ChannelParams)? onStartNewChat;
+  final void Function(ChannelUiParams)? onStartNewChat;
 
   @override
   State<ContactsView> createState() => _ContactsViewState();
@@ -32,14 +32,14 @@ class _ContactsViewState extends State<ContactsView> {
     });
   }
 
-  void _handleNewChat(ChannelParams params) {
+  void _handleNewChat(ChannelUiParams params) {
     if (widget.onStartNewChat == null) return;
     widget.onStartNewChat?.call(params);
   }
 
   void _handlePrivateChannel(UserModel user) {
     _handleNewChat(
-      ChannelParams(type: ChannelType.private, members: [user]),
+      ChannelUiParams(type: ChannelType.private, members: [user]),
     );
   }
 

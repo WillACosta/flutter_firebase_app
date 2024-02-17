@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:firebase_auth_app/core/core.dart';
-import 'package:firebase_auth_app/presentation/params/params.dart';
 import 'package:flutter/material.dart';
 
+import '../../params/params.dart';
+import '../../utils/utils.dart';
 import '../chat/chat.dart';
 import '../contacts/components/components.dart';
 import '../contacts/contacts_view.dart';
@@ -36,15 +37,15 @@ class _HomeViewState extends State<HomeView> {
   }
 
   void _openChannelFor({
-    String? channelId,
-    ChannelParams? params,
+    String? existingChannelId,
+    required ChannelUiParams params,
   }) {
     Navigator.pushNamed(
       context,
       '/chat-conversation',
       arguments: ChatConversationArgs(
-        currentChannelId: channelId,
-        channelParams: params,
+        existingChannelId: existingChannelId,
+        params: params,
       ),
     );
   }
@@ -54,7 +55,7 @@ class _HomeViewState extends State<HomeView> {
       context: context,
       builder: (_) => ContactsView(
         contacts: vm.contactsState,
-        onStartNewChat: (params) => _openChannelFor(params: params),
+        onStartNewChat: (value) => _openChannelFor(params: value),
       ),
     );
   }
@@ -86,10 +87,19 @@ class _HomeViewState extends State<HomeView> {
               itemBuilder: (_, index) {
                 final currentChannel = channels[index];
                 final channelDescription = currentChannel.createdDate ?? '-';
-                final channelName = vm.resolveChannelName(currentChannel);
+
+                final channelName = resolveChannelName(
+                  currentUserId: vm.currentUserId,
+                  type: currentChannel.type,
+                  users: currentChannel.members,
+                  groupName: currentChannel.name,
+                );
 
                 return ContactItem(
-                  onTap: () => _openChannelFor(channelId: currentChannel.id),
+                  onTap: () => _openChannelFor(
+                    existingChannelId: currentChannel.id,
+                    params: currentChannel.toUiParams(),
+                  ),
                   title: channelName,
                   description: channelDescription,
                 );

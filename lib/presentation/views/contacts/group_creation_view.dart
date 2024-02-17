@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../features/authentication/authentication.dart';
 
 class GroupCreationView extends StatefulWidget {
-  final void Function(ChannelParams)? onCreateChannel;
+  final void Function(ChannelUiParams)? onCreateChannel;
   final List<UserModel> contacts;
 
   const GroupCreationView({
@@ -63,7 +63,7 @@ class _GroupCreationViewState extends State<GroupCreationView> {
 
     if (isValidForm && widget.onCreateChannel != null) {
       widget.onCreateChannel!.call(
-        ChannelParams(
+        ChannelUiParams(
           type: ChannelType.group,
           members: selectedContacts,
           name: _nameController.text,

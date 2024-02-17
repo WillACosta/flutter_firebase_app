@@ -1,1 +1,1 @@
-export 'channel_params.dart';
+export 'channel_ui_params.dart';

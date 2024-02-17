@@ -15,10 +15,14 @@ class CreateOrListenToMessagesByChannelUseCase {
     this._repository,
   );
 
-  Stream<List<MessageModel>> call(CreateChannelParams params) {
+  Stream<List<MessageModel>> call(
+    CreateChannelParams params,
+    void Function(String) onReceiveCurrentChannelId,
+  ) {
     final members = params.members;
 
     if (params.currentChannelId != null) {
+      onReceiveCurrentChannelId(params.currentChannelId!);
       return _getMessagesByChannelId(params.currentChannelId!);
     }
 
@@ -28,11 +32,16 @@ class CreateOrListenToMessagesByChannelUseCase {
           currentUserId: params.currentUserId,
           chattingWithId: members!.first.id,
         ),
-      ).switchMap(_getMessagesByChannelId);
+      ).switchMap((id) {
+        onReceiveCurrentChannelId(id);
+        return _getMessagesByChannelId(id);
+      });
     }
 
-    return _createGroupChannelUseCase(params)
-        .switchMap(_getMessagesByChannelId);
+    return _createGroupChannelUseCase(params).switchMap((id) {
+      onReceiveCurrentChannelId(id);
+      return _getMessagesByChannelId(id);
+    });
   }
 
   Stream<List<MessageModel>> _getMessagesByChannelId(String id) {

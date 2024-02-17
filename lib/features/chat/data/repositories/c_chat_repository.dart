@@ -3,8 +3,8 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../../core/core.dart';
 import '../../../contacts/contacts.dart';
+import '../../chat.dart';
 import '../models/models.dart';
-import 'chat_repository.dart';
 
 class CChatRepository implements ChatRepository {
   CChatRepository(this._firestore, this._contactsRepository);
@@ -98,23 +98,27 @@ class CChatRepository implements ChatRepository {
   }
 
   @override
-  Stream<String?> getCurrentChannelOrNull(List<dynamic> ids) {
+  Stream<String?> getCurrentChannelOrNull({
+    required List<String> members,
+    required ChannelType channelType,
+  }) {
     final equality = const ListEquality().equals;
 
     return _firestore
         .collection(DBCollection.channels)
-        .where('members', arrayContainsAny: ids)
+        .where('members', arrayContainsAny: members)
+        .where('type', isEqualTo: channelType.name)
         .snapshots()
         .map(
       (response) {
         final channels = response.docs.where((e) {
           final data = e.data();
-          final members = data['members'];
+          final itemMembers = data['members'];
 
+          itemMembers.sort();
           members.sort();
-          ids.sort();
 
-          return equality(members, ids);
+          return equality(itemMembers, members);
         }).toList();
 
         if (channels.isEmpty) return null;

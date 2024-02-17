@@ -11,7 +11,12 @@ class CreatePrivateChatUseCase {
   ) {
     final members = [params.currentUserId, params.chattingWithId];
 
-    return _chatRepository.getCurrentChannelOrNull(members).switchMap(
+    return _chatRepository
+        .getCurrentChannelOrNull(
+      members: members,
+      channelType: ChannelType.private,
+    )
+        .switchMap(
       (channelId) {
         if (channelId == null) {
           return _chatRepository.createChannel(
@@ -36,8 +41,3 @@ class CreatePrivateChatParams {
     required this.chattingWithId,
   });
 }
-
-/// private: [LkXH8SjzdTd38SqZW4PDW3TnjqS2, aLcQeG1hzvS6GRLmr7vSbioyzCh2]
-/// group: [LkXH8SjzdTd38SqZW4PDW3TnjqS2, aLcQeG1hzvS6GRLmr7vSbioyzCh2]
-///
-///

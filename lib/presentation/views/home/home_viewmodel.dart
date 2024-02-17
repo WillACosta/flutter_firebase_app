@@ -37,23 +37,4 @@ class HomeViewModel extends ViewModel {
   Future<void> logout() {
     return _authRepository.signOut();
   }
-
-  /// TODO: move this to an Usecase for reuse
-  String resolveChannelName(
-    ChannelModel channel,
-  ) {
-    final type = channel.type;
-    final members = channel.members;
-    final channelName = channel.name;
-
-    if (type == ChannelType.private) {
-      final foundChattingWith = members.where((user) {
-        return user.id != currentUserId && channel.type == ChannelType.private;
-      }).toList();
-
-      return foundChattingWith.first.name;
-    }
-
-    return channelName!;
-  }
 }
