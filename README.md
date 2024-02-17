@@ -23,7 +23,7 @@ messaging as well a list of available contacts.
 1. Just clone this repository with:
 
 ```shell
-git clone https://github.com/willACosta/firebase_app.git
+git clone https://github.com/WillACosta/flutter_firebase_app
 ```
 
 2. The next step is to setup this application with your own Firebase project
