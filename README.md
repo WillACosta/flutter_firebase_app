@@ -20,8 +20,8 @@ messaging as well a list of available contacts.
 
 ## Project's Architecture
 
-In the image below you can see how the project's architecture is implemented and how each part
-works with each other to achieve our desired behavior using Firebase services.
+In the image below you can see how the project's architecture was implemented
+and its integration with Firebase services:
 
 <img src="docs/arch.png" /><br><br>
 
