@@ -18,6 +18,13 @@ messaging as well a list of available contacts.
 - Secure Storage for store user credentials
 - Material Design 3
 
+## Project's Architecture
+
+In the image below you can see how the project's architecture is implemented and how each part
+works with each other to achieve our desired behavior using Firebase services.
+
+<img src="docs/arch.png" /><br><br>
+
 ## Getting Started
 
 1. Just clone this repository with:
